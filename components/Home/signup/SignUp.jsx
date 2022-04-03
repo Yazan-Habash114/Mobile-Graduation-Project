@@ -7,30 +7,29 @@ import axios from 'axios';
 const SignUp = ({ setSlide }) => {
 
     const [accountType, setAccountType] = React.useState('User Account')
-    // AsyncStorage.setItem('type', 'fdj')
 
     return (
         <View style={styles.container}>
             <TextInput
                 style={styles.input}
                 placeholder="Username"
-                placeholderTextColor="#f8f8f8"
+                placeholderTextColor="#a8a8a8"
             />
             <TextInput
                 style={styles.input}
                 placeholder="Email"
-                placeholderTextColor="#f8f8f8"
+                placeholderTextColor="#a8a8a8"
             />
             <TextInput
                 style={styles.input}
                 placeholder="Password"
-                placeholderTextColor="#f8f8f8"
+                placeholderTextColor="#a8a8a8"
                 secureTextEntry={true}
             />
             <TextInput
                 style={styles.input}
                 placeholder="Phone"
-                placeholderTextColor="#f8f8f8"
+                placeholderTextColor="#a8a8a8"
             />
             <View style={styles.accountType}>
                 <Text style={styles.typeSpan}>Account Type:</Text>
@@ -47,12 +46,11 @@ const SignUp = ({ setSlide }) => {
                 <Text style={styles.haveAccount}>Have an account ?</Text>
             </TouchableOpacity>
             <Button onPress={() => {
-                axios.get('http://10.0.0.8:8080/users/5').then(response => {
-                    alert(response.data.email)
-                    // alert(AsyncStorage.getItem('type'))
-                })
+                // axios.get('http://10.0.0.8:8080/users/5').then(response => {
+                //     alert(response.data.email)
+                //     // alert(AsyncStorage.getItem('type'))
+                // })
             }}
-                style={styles.submitButton}
                 title="Create Account"
                 color="rgb(190, 18, 48)"
             >
@@ -92,7 +90,9 @@ const styles = StyleSheet.create({
     },
     dropList: {
         width: '80%',
-        color: 'white'
+        color: 'white',
+        backgroundColor: 'rgb(190, 18, 48)',
+        marginTop: 5,
     },
     typeSpan: {
         color: 'white',
