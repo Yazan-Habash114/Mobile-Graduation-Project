@@ -1,7 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Button } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
-const SignUp = () => {
+const SignUp = ({ setSlide }) => {
+
+    const [accountType, setAccountType] = React.useState('User Account')
+    // AsyncStorage.setItem('type', 'fdj')
+
     return (
         <View style={styles.container}>
             <TextInput
@@ -27,11 +34,24 @@ const SignUp = () => {
             />
             <View style={styles.accountType}>
                 <Text style={styles.typeSpan}>Account Type:</Text>
+                <Picker
+                    style={styles.dropList}
+                    onValueChange={(itemValue, itemIndex) => setAccountType(itemValue)}
+                    selectedValue={accountType}
+                >
+                    <Picker.Item label="User Account" value="User Account" />
+                    <Picker.Item label="Garage Account" value="Garage Account" />
+                </Picker>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => setSlide(1)}>
                 <Text style={styles.haveAccount}>Have an account ?</Text>
             </TouchableOpacity>
-            <Button
+            <Button onPress={() => {
+                axios.get('http://10.0.0.8:8080/users/5').then(response => {
+                    alert(response.data.email)
+                    // alert(AsyncStorage.getItem('type'))
+                })
+            }}
                 style={styles.submitButton}
                 title="Create Account"
                 color="rgb(190, 18, 48)"
@@ -65,7 +85,14 @@ const styles = StyleSheet.create({
     accountType: {
         margin: 10,
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+    },
+    dropList: {
+        width: '80%',
+        color: 'white'
     },
     typeSpan: {
         color: 'white',
