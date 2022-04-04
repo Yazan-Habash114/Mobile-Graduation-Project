@@ -4,9 +4,9 @@ import {
     StyleSheet,
     Image,
 } from "react-native";
-import SignIn from "./signin/SignIn";
-import SignUp from "./signup/SignUp";
-import React from 'react'
+import SignIn from "../signin/SignIn";
+import SignUp from "../signup/SignUp";
+import React from 'react';
 
 
 const Form = () => {
@@ -15,7 +15,7 @@ const Form = () => {
 
     return (
         <View style={styles.container}>
-            <Image source={require('../../assets/images/iDrive.jpg')} style={styles.logo} />
+            <Image source={require('../../../assets/images/iDrive.jpg')} style={styles.logo} />
             {
                 slide == 0 ?
                     <View style={styles.formSlide}>

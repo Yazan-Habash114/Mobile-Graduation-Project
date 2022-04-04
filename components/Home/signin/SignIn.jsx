@@ -2,7 +2,6 @@ import React from 'react'
 import { Text, View, TouchableOpacity, StyleSheet, TextInput, Button } from 'react-native'
 import ForgetWindow from '../forgetWindow/ForgetWindow'
 
-
 const SignIn = ({ setSlide }) => {
 
     const [showForget, setShowForget] = React.useState(false)

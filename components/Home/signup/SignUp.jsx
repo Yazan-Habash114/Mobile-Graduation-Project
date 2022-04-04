@@ -3,10 +3,13 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, Button } from 'rea
 import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
 
 const SignUp = ({ setSlide }) => {
 
     const [accountType, setAccountType] = React.useState('User Account')
+
+    const navigation = useNavigation()
 
     return (
         <View style={styles.container}>
@@ -38,8 +41,8 @@ const SignUp = ({ setSlide }) => {
                     onValueChange={(itemValue, itemIndex) => setAccountType(itemValue)}
                     selectedValue={accountType}
                 >
-                    <Picker.Item label="User Account" value="User Account" />
-                    <Picker.Item label="Garage Account" value="Garage Account" />
+                    <Picker.Item label="User" value="User" />
+                    <Picker.Item label="Garage" value="Garage" />
                 </Picker>
             </View>
             <TouchableOpacity onPress={() => setSlide(1)}>
@@ -50,6 +53,7 @@ const SignUp = ({ setSlide }) => {
                 //     alert(response.data.email)
                 //     // alert(AsyncStorage.getItem('type'))
                 // })
+                navigation.navigate('Test Screen')
             }}
                 title="Create Account"
                 color="rgb(190, 18, 48)"
@@ -89,7 +93,7 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     dropList: {
-        width: '80%',
+        width: '45%',
         color: 'white',
         backgroundColor: 'rgb(190, 18, 48)',
         marginTop: 5,
@@ -102,6 +106,7 @@ const styles = StyleSheet.create({
     haveAccount: {
         marginBottom: 10,
         color: "rgb(190, 18, 47)",
+        fontSize: 18
     },
 })
 export default SignUp

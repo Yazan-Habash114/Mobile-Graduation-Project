@@ -1,27 +1,20 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, SafeAreaView, TouchableWithoutFeedback } from 'react-native';
-import Root from './screens/Root';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
-import dismissKeyboard from 'react-native/Libraries/Utilities/dismissKeyboard'; import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Landing from './screens/Landing';
-
-const Stack = createNativeStackNavigator();
+import {
+  StyleSheet,
+  SafeAreaView,
+  TouchableWithoutFeedback
+} from 'react-native';
+import HomeStack from './routes/HomeStack';
+import dismissKeyboard from 'react-native/Libraries/Utilities/dismissKeyboard';
 
 export default function App() {
   return (
-    // <TouchableWithoutFeedback onPress={() => dismissKeyboard()}>
-    //   <SafeAreaView style={styles.container}>
-    //     <Root />
-    //     <StatusBar style="auto" />
-    //     <KeyboardSpacer />
-    //   </SafeAreaView>
-    // </TouchableWithoutFeedback>
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={Landing} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <TouchableWithoutFeedback onPress={() => dismissKeyboard()}>
+      <SafeAreaView style={styles.container}>
+        <HomeStack />
+        <StatusBar style="auto" />
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 

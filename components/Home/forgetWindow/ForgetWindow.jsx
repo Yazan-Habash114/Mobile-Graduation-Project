@@ -1,5 +1,6 @@
 import React from 'react'
-import { TextInput, View, StyleSheet, Text, Button } from "react-native"
+import { TextInput, View, StyleSheet, Text, Button, TouchableOpacity } from "react-native"
+import { MaterialIcons } from '@expo/vector-icons';
 
 const ForgetWindow = ({ setShowForget }) => {
 
@@ -7,11 +8,9 @@ const ForgetWindow = ({ setShowForget }) => {
 
     return (
         <View style={styles.container}>
-            <Button
-                onPress={() => { setShowForget(false) }}
-                title="X"
-                color="rgb(190, 18, 48)"
-            />
+            <TouchableOpacity onPress={() => setShowForget(false)}>
+                <MaterialIcons name="cancel" size={38} color="rgb(190, 18, 48)" />
+            </TouchableOpacity>
             <View style={styles.form}>
                 <Text style={styles.label}>Enter code sent to your email:</Text>
                 <TextInput
