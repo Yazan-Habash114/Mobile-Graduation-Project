@@ -1,10 +1,12 @@
 import React from 'react'
 import { Text, View, TouchableOpacity, StyleSheet, TextInput, Button } from 'react-native'
-import ForgetWindow from '../forgetWindow/ForgetWindow'
+import ForgetWindow from '../forgetWindow/ForgetWindow';
+import { useNavigation } from '@react-navigation/native';
 
 const SignIn = ({ setSlide }) => {
 
     const [showForget, setShowForget] = React.useState(false)
+    const navigation = useNavigation()
 
     return (
         <View style={styles.container}>
@@ -29,8 +31,15 @@ const SignIn = ({ setSlide }) => {
                 <Text style={styles.haveAccount}>Have an account ?</Text>
             </TouchableOpacity>
             <Button
-                title="Create Account"
+                title="Login"
                 color="rgb(190, 18, 48)"
+                onPress={() => {
+                    // navigation.navigate('Tabs')
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'Tabs' }]
+                    })
+                }}
             />
         </View>
     )

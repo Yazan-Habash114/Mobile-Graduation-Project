@@ -1,8 +1,13 @@
 import React from "react"
-import { Text, ScrollView, StyleSheet, Image, View } from "react-native"
+import { Text, ScrollView, StyleSheet, Image, View, Button } from "react-native"
 import ProfileImage from "../components/Profile/profile-image/ProfileImage"
+import { clearAsyncStorage } from "../global functions and info/global"
+import { useNavigation } from "@react-navigation/native"
 
 const Profile = () => {
+
+    const navigation = useNavigation()
+
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <Image
@@ -14,6 +19,14 @@ const Profile = () => {
                 <Text>Name</Text>
                 <Text>Email</Text>
             </View>
+            <Button title="Sign out" onPress={() => {
+                clearAsyncStorage()
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Login/Register' }]
+                })
+                // navigation.navigate('Login/Register')
+            }} />
         </ScrollView>
     )
 }

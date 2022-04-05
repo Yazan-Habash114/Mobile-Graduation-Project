@@ -4,14 +4,17 @@ import {
   SafeAreaView,
   TouchableWithoutFeedback
 } from 'react-native';
-import HomeStack from './routes/HomeStack';
+import MainStack from './routes/MainStack';
 import dismissKeyboard from 'react-native/Libraries/Utilities/dismissKeyboard';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
+  AsyncStorage.setItem('loggedIn', 'true')
+
   return (
     <TouchableWithoutFeedback onPress={() => dismissKeyboard()}>
       <SafeAreaView style={styles.container}>
-        <HomeStack />
+        <MainStack />
         <StatusBar style="auto" />
       </SafeAreaView>
     </TouchableWithoutFeedback>
