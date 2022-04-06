@@ -53,7 +53,11 @@ const SignUp = ({ setSlide }) => {
                 //     alert(response.data.email)
                 //     // alert(AsyncStorage.getItem('type'))
                 // })
-                navigation.navigate('Test Screen')
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Tabs' }]
+                })
+                // navigation.navigate('Tabs')
             }}
                 title="Create Account"
                 color="rgb(190, 18, 48)"

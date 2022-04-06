@@ -1,12 +1,15 @@
 import React from "react"
-import { Text, ScrollView, StyleSheet, Image, View, Button } from "react-native"
+import { Text, ScrollView, StyleSheet, Image, View, TouchableOpacity } from "react-native"
 import ProfileImage from "../components/Profile/profile-image/ProfileImage"
 import { clearAsyncStorage } from "../global functions and info/global"
 import { useNavigation } from "@react-navigation/native"
+import ConfirmWindow from "../components/Profile/confirm-window/ConfirmWindow"
 
 const Profile = () => {
 
     const navigation = useNavigation()
+
+    const [showConfirmWindow, setShowWindow] = React.useState(false)
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -16,17 +19,36 @@ const Profile = () => {
             />
             <ProfileImage />
             <View style={styles.info}>
-                <Text>Name</Text>
-                <Text>Email</Text>
+                <Text style={styles.infoItem}>Name</Text>
+                <Text style={styles.infoItem}>Email</Text>
             </View>
-            <Button title="Sign out" onPress={() => {
-                clearAsyncStorage()
-                navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'Login/Register' }]
-                })
-                // navigation.navigate('Login/Register')
-            }} />
+            <View style={styles.bar}>
+                <TouchableOpacity onPress={() => navigation.navigate('Edit your profile')}>
+                    <Text style={styles.barElements}>Edit profile</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Your cart')}>
+                    <Text style={styles.barElements}>Your Cart</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Your ordered services')}>
+                    <Text style={styles.barElements}>Ordered Services</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={styles.bar}>
+                <TouchableOpacity onPress={() => setShowWindow(true)}>
+                    <Text style={styles.barElements}>Delete Account</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => {
+                    clearAsyncStorage()
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'Login/Register' }]
+                    })
+                    // navigation.navigate('Login/Register')
+                }}>
+                    <Text style={styles.barElements}>Sign Out</Text>
+                </TouchableOpacity>
+            </View>
+            {showConfirmWindow ? <ConfirmWindow setShowWindow={setShowWindow} /> : null}
         </ScrollView>
     )
 }
@@ -37,6 +59,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'flex-start',
         alignItems: 'center',
+        backgroundColor: '#595959'
     },
     img: {
         width: '100%',
@@ -48,6 +71,29 @@ const styles = StyleSheet.create({
         transform: [{
             translateY: -80
         }]
+    },
+    infoItem: {
+        color: 'white',
+        fontSize: 18,
+    },
+    bar: {
+        display: 'flex',
+        justifyContent: 'space-around',
+        width: '95%',
+        marginVertical: 10,
+        transform: [{
+            translateY: -80
+        }]
+    },
+    barElements: {
+        fontSize: 18,
+        color: 'white',
+        backgroundColor: 'rgb(210, 38, 68)',
+        padding: 5,
+        borderRadius: 5,
+        marginVertical: 5,
+        marginHorizontal: 20,
+        textAlign: 'center',
     }
 })
 

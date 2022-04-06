@@ -21,8 +21,8 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         height: 170,
         width: 170,
-        borderWidth: 1,
-        borderColor: 'gray',
+        borderWidth: 3,
+        borderColor: 'rgb(190, 18, 48)',
         marginVertical: 5,
         transform: [{
             translateY: -80
