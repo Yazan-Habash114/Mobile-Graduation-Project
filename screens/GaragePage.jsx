@@ -3,9 +3,13 @@ import { Text, View, StyleSheet } from "react-native"
 
 const GaragePage = ({ route }) => {
     const { garageId } = route.params
+
+
+
     return (
         <View style={styles.container}>
             <Text>Garage screen for garage {garageId}</Text>
+
         </View>
     )
 }
