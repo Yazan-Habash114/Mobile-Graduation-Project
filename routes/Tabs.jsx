@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import Map from '../screens/Map';
+import MapStack from './MapStack';
 import HomePage from '../screens/HomePage';
 import ProfileStack from './ProfileStack';
 
@@ -32,7 +32,7 @@ export default function App() {
             >
                 <Tab.Screen options={{ headerShown: false }} name="HomePage" component={HomePage} />
                 <Tab.Screen options={{ headerShown: false }} name="Profile Stack" component={ProfileStack} />
-                <Tab.Screen options={{ headerShown: false }} name="Map" component={Map} />
+                <Tab.Screen options={{ headerShown: false }} name="Map" component={MapStack} />
             </Tab.Navigator>
         </View>
     );
