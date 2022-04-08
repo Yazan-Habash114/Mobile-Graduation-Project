@@ -9,7 +9,7 @@ const ServiceStack = () => {
     return (
         <View style={styles.container}>
             <Stack.Navigator>
-                <Stack.Screen options={{ headerShown: false }} name="All Services" component={AllServices} />
+                <Stack.Screen options={{ headerShown: false }} name="Services" component={AllServices} />
                 <Stack.Screen options={{ headerShown: false }} name="Service Details" component={ServiceDetails} />
             </Stack.Navigator>
         </View>
