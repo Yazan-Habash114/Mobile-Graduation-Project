@@ -1,17 +1,16 @@
 import React from 'react'
 import { Text, View, StyleSheet, ScrollView, Image, TouchableOpacity } from "react-native"
 import { WebView } from 'react-native-webview'
-import { ipAdd } from "../global functions and info/global"
-import * as Location from 'expo-location';
+import { ipAdd, port, apiKey } from "../global functions and info/global"
+import * as Location from 'expo-location'
 
 const ServiceDetails = ({ route }) => {
-
     const { service } = route.params
+
     const [canDeliver, setCanDeliver] = React.useState(service.canDeliver)
 
     const [location, setLocation] = React.useState(null);
     const [errorMsg, setErrorMsg] = React.useState(null);
-    const [id, setId] = React.useState(null);
 
     React.useEffect(() => {
         (async () => {
@@ -78,9 +77,10 @@ const ServiceDetails = ({ route }) => {
                         <Text style={styles.orderText}>ORDER THIS SERVICE</Text>
                     </TouchableOpacity>
                     {location != null ? <WebView
+                        nestedScrollEnabled
                         style={styles.map}
                         originWhitelist={['*']}
-                        source={{ uri: `http://10.0.0.9:3000/using-map/${location.coords.longitude}/${location.coords.latitude}/35.21821/31.768319` }}
+                        source={{ uri: `http://${ipAdd}:${port}/using-map/${location.coords.longitude}/${location.coords.latitude}/35.21821/31.768319` }}
                     /> : null}
                 </View>
             </ScrollView>
