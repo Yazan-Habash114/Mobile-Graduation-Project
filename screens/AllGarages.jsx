@@ -1,14 +1,10 @@
 import React from 'react'
 import { Text, View, StyleSheet } from "react-native"
 
-const GaragePage = ({ route }) => {
-    const { garageId } = route.params
-
-
-
+const AllGarages = () => {
     return (
         <View style={styles.container}>
-            <Text>Garage screen for garage {garageId}</Text>
+            <Text>All Garages Screen</Text>
         </View>
     )
 }
@@ -19,4 +15,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default GaragePage
+export default AllGarages

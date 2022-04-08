@@ -1,22 +1,18 @@
 import React from 'react'
 import { Text, View, StyleSheet } from "react-native"
 
-const GaragePage = ({ route }) => {
-    const { garageId } = route.params
-
-
-
+const ServiceDetails = () => {
     return (
         <View style={styles.container}>
-            <Text>Garage screen for garage {garageId}</Text>
+            <Text>Service Details Screen</Text>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-
+        flex: 1,
     },
 })
 
-export default GaragePage
+export default ServiceDetails

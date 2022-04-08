@@ -1,13 +1,17 @@
 import React from 'react'
-import { Text, View, StyleSheet, Button, ScrollView } from "react-native"
+import { Text, View, StyleSheet, Button, ScrollView, FlatList } from "react-native"
 import DatePicker from 'react-native-neat-date-picker'
-import Service from '../components/Service/Service'
+import { data } from './data'
+import { useNavigation } from '@react-navigation/native'
 
 
 const HomePage = () => {
 
+    const navigation = useNavigation()
+
     const [showDatePicker, setShowDatePicker] = React.useState(false)
     const [date, setDate] = React.useState(null)
+    const [id, setId] = React.useState('')
 
     let d = new Date()
     d.setDate(d.getDate() - 1)
@@ -17,9 +21,27 @@ const HomePage = () => {
         setDate(date.dateString)
     }
 
+    const renderList = ({ item }) => {
+        return (
+            <View style={styles.listItem}>
+                <Text
+                    onPress={() => setId(item.userId)}
+                    style={{ marginVertical: 8, backgroundColor: '#ddd' }}>{item.title}</Text>
+            </View>
+        );
+    };
+
     return (
         <View style={styles.container}>
-            {/* <Text>Home screen</Text> */}
+            <Text>Home screen</Text>
+            <Button
+                title="All Services"
+                onPress={() => navigation.navigate('All Services')}
+            />
+            <Button
+                title="All Garages"
+                onPress={() => navigation.navigate('All Garages')}
+            />
             {/* <Button title={'open'} onPress={() => setShowDatePicker(true)} />
             <DatePicker
                 isVisible={showDatePicker}
@@ -30,48 +52,18 @@ const HomePage = () => {
                 onConfirm={onConfirm}
             />
             <Text>{date}</Text> */}
-            <ScrollView contentContainerStyle={{ width: '100%' }}>
-                <View style={styles.serviceType}>
-                    <Text style={styles.typeTitle}>Maintenance</Text>
-                    <Service />
-                    <Service />
-                    <Service />
-                </View>
-                <View style={styles.serviceType}>
-                    <Text style={styles.typeTitle}>Electrical Services</Text>
-                    <Service />
-                    <Service />
-                </View>
-                <View style={styles.serviceType}>
-                    <Text style={styles.typeTitle}>Car Washing</Text>
-                    <Service />
-                    <Service />
-                </View>
-            </ScrollView>
         </View>
+        // <View style={styles.container}>
+        //     <FlatList data={data} renderItem={renderList} keyExtractor={item => item.userId} />
+        //     <Text>id = {id}</Text>
+        // </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'stretch',
-        backgroundColor: '#3f3f3f'
     },
-    serviceType: {
-        marginHorizontal: 10,
-        borderWidth: 2,
-        borderColor: 'white',
-        borderTopWidth: 0,
-        borderRadius: 15,
-        marginVertical: 15,
-        padding: 5,
-    },
-    typeTitle: {
-        textAlign: 'center',
-        fontSize: 20,
-        color: 'white'
-    }
 })
 
 export default HomePage

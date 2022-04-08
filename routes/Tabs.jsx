@@ -2,8 +2,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import MapStack from './MapStack';
-import HomePage from '../screens/HomePage';
 import ProfileStack from './ProfileStack';
+import HomeStack from './HomeStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -26,11 +26,11 @@ export default function App() {
                         // You can return any component that you like here!
                         return <Ionicons name={iconName} size={size} color={color} />;
                     },
-                    tabBarActiveTintColor: 'tomato',
+                    tabBarActiveTintColor: 'rgb(200, 28, 50)',
                     tabBarInactiveTintColor: 'gray',
                 })}
             >
-                <Tab.Screen options={{ headerShown: false }} name="HomePage" component={HomePage} />
+                <Tab.Screen options={{ headerShown: false }} name="HomePage" component={HomeStack} />
                 <Tab.Screen options={{ headerShown: false }} name="Profile Stack" component={ProfileStack} />
                 <Tab.Screen options={{ headerShown: false }} name="Map" component={MapStack} />
             </Tab.Navigator>
