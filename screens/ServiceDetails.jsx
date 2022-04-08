@@ -1,10 +1,13 @@
 import React from 'react'
 import { Text, View, StyleSheet } from "react-native"
 
-const ServiceDetails = () => {
+const ServiceDetails = ({ route }) => {
+
+    const { service } = route.params
+
     return (
         <View style={styles.container}>
-            <Text>Service Details Screen</Text>
+            <Text>{service.name}</Text>
         </View>
     )
 }

@@ -1,14 +1,22 @@
 import React from 'react'
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native"
+import { useNavigation } from '@react-navigation/native'
 
+const Service = ({ item }) => {
 
-const Service = () => {
+    const navigation = useNavigation()
+
     return (
-        <TouchableOpacity style={styles.container}>
-            <Text style={styles.name}>Service Name</Text>
+        <TouchableOpacity
+            onPress={() => navigation.navigate('Service Details', {
+                service: item
+            })}
+            style={styles.container}
+        >
+            <Text style={styles.name}>{item.name}</Text>
             <View style={styles.subSection}>
-                <Text style={styles.text}>$100</Text>
-                <Text style={styles.text}>By: Garage Name</Text>
+                <Text style={styles.text}>${item.price}</Text>
+                <Text style={styles.text}>By: {item.garageName}</Text>
             </View>
         </TouchableOpacity>
     )

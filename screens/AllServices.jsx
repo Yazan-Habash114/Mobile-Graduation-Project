@@ -1,32 +1,79 @@
 import React from 'react'
-import { Text, View, StyleSheet, ScrollView } from "react-native"
+import { Text, View, StyleSheet, ScrollView, FlatList, SafeAreaView } from "react-native"
 import Service from '../components/Service/Service'
-import { useNavigation } from '@react-navigation/native'
+import { services } from './services'
 
 const AllServices = () => {
 
-    const navigation = useNavigation()
+    const sections = [
+        {
+            title: 'Maintenance'
+        },
+        {
+            title: 'Electrical Services'
+        },
+        {
+            title: 'Car Washing'
+        }
+    ]
+
+    const renderSections = ({ item }) => {
+        return (
+            <View style={styles.serviceType}>
+                <Text style={styles.typeTitle}>{item.title}</Text>
+                <FlatList
+                    nestedScrollEnabled={true}
+                    data={services}
+                    renderItem={renderList}
+                    keyExtractor={item => item.serviceId}
+                />
+            </View>
+        )
+    }
+
+    const renderList = ({ item }) => {
+        return (
+            <Service item={item} />
+        );
+    };
 
     return (
         <View style={styles.container}>
-            <ScrollView contentContainerStyle={{ width: '100%' }}>
-                <View style={styles.serviceType}>
+            <SafeAreaView style={{ width: '100%' }}>
+                <FlatList
+                    nestedScrollEnabled={true}
+                    data={sections}
+                    renderItem={renderSections}
+                    keyExtractor={item => item.title}
+                />
+                {/* <View style={styles.serviceType}>
                     <Text style={styles.typeTitle}>Maintenance</Text>
-                    <Service onPress={() => alert('fff')} />
-                    <Service />
-                    <Service />
+                    <FlatList
+                        nestedScrollEnabled={true}
+                        data={services}
+                        renderItem={renderList}
+                        keyExtractor={item => item.serviceId}
+                    />
                 </View>
                 <View style={styles.serviceType}>
                     <Text style={styles.typeTitle}>Electrical Services</Text>
-                    <Service />
-                    <Service />
+                    <FlatList
+                        nestedScrollEnabled={true}
+                        data={services}
+                        renderItem={renderList}
+                        keyExtractor={item => item.serviceId}
+                    />
                 </View>
                 <View style={styles.serviceType}>
                     <Text style={styles.typeTitle}>Car Washing</Text>
-                    <Service />
-                    <Service />
-                </View>
-            </ScrollView>
+                    <FlatList
+                        nestedScrollEnabled={true}
+                        data={services}
+                        renderItem={renderList}
+                        keyExtractor={item => item.serviceId}
+                    />
+                </View> */}
+            </SafeAreaView>
         </View>
     )
 }
