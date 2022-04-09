@@ -13,10 +13,10 @@ const Service = ({ item }) => {
             })}
             style={styles.container}
         >
-            <Text style={styles.name}>{item.name}</Text>
+            <Text style={styles.name}>{item.serviceName}</Text>
             <View style={styles.subSection}>
                 <Text style={styles.text}>${item.price}</Text>
-                <Text style={styles.text}>By: {item.garageName}</Text>
+                <Text style={styles.text}>By: {item.supportedGarageName}</Text>
             </View>
         </TouchableOpacity>
     )

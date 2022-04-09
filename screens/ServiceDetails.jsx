@@ -1,16 +1,31 @@
 import React from 'react'
-import { Text, View, StyleSheet, ScrollView, Image, TouchableOpacity } from "react-native"
+import { Text, View, StyleSheet, ScrollView, Image, TouchableOpacity, FlatList } from "react-native"
 import { WebView } from 'react-native-webview'
 import { ipAdd, port, apiKey } from "../global functions and info/global"
 import * as Location from 'expo-location'
+import { useNavigation } from '@react-navigation/native'
+import axios from 'axios'
 
 const ServiceDetails = ({ route }) => {
     const { service } = route.params
 
     const [canDeliver, setCanDeliver] = React.useState(service.canDeliver)
+    const [slotTimes, setSlotTimes] = React.useState(service.slotTimes)
+    const [garageId, setGarageId] = React.useState(service.supportedGarageID)
+    const [garageLocation, setGarageLocation] = React.useState(service.supportedGarageLocation)
 
     const [location, setLocation] = React.useState(null);
     const [errorMsg, setErrorMsg] = React.useState(null);
+
+    const navigation = useNavigation()
+
+    const renderList = ({ item }) => {
+        return (
+            <TouchableOpacity onPress={() => alert(item.slotTimeID)}>
+                <Text style={styles.slot}>{item.startTime} - {item.endTime}</Text>
+            </TouchableOpacity>
+        );
+    };
 
     React.useEffect(() => {
         (async () => {
@@ -22,6 +37,10 @@ const ServiceDetails = ({ route }) => {
 
             let location = await Location.getCurrentPositionAsync({});
             setLocation(location);
+            console.log(location.coords.longitude)
+            console.log(location.coords.latitude)
+            console.log('GarageLocation: ' + garageLocation.longitude)
+            console.log('GarageLocation: ' + garageLocation.latitude)
         })();
     }, [])
 
@@ -47,44 +66,57 @@ const ServiceDetails = ({ route }) => {
                             <Text style={styles.key}>Price: </Text>
                         </View>
                         <View style={styles.values}>
-                            <TouchableOpacity>
-                                <Text style={styles.value}>{service.garageName}</Text>
+                            <TouchableOpacity onPress={() => navigation.navigate('Garage', {
+                                garageId: garageId,
+                            })}>
+                                <Text style={styles.value}>{service.supportedGarageName}</Text>
                             </TouchableOpacity>
                             <Text style={styles.value}>${service.price}</Text>
                         </View>
                     </View>
-                    <Text style={styles.description}>{service.description}</Text>
+                    <Text style={styles.description}>{service.serviceDescription}</Text>
 
                     <Text style={styles.headers}>
                         Choose a suitable date to book the service
                     </Text>
+
                     <View style={styles.timeSlots}>
-                        <TouchableOpacity onPress={() => alert('hhh')}>
-                            <Text style={styles.slot}>09:00 - 10:00</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => alert('hhh')}>
-                            <Text style={styles.slot}>11:00 - 13:30</Text>
-                        </TouchableOpacity>
+                        <FlatList
+                            nestedScrollEnabled={true}
+                            data={slotTimes}
+                            renderItem={renderList}
+                            keyExtractor={item => item.slotTimeID}
+                        />
                     </View>
 
-                    <Text style={styles.headers}>
-                        Or, order the service according to your location
-                    </Text>
-                    <TouchableOpacity
-                        style={styles.order}
-                        onPress={() => alert('The service has been booked')}
-                    >
-                        <Text style={styles.orderText}>ORDER THIS SERVICE</Text>
-                    </TouchableOpacity>
+                    {
+                        canDeliver ? (
+                            <Text style={styles.headers}>
+                                Or, order the service according to your location
+                            </Text>
+                        ) : null
+                    }
+
+                    {
+                        canDeliver ? (
+                            <TouchableOpacity
+                                style={styles.order}
+                                onPress={() => alert('The service has been booked')}
+                            >
+                                <Text style={styles.orderText}>ORDER THIS SERVICE</Text>
+                            </TouchableOpacity>
+                        ) : null
+                    }
+
                     {location != null ? <WebView
                         nestedScrollEnabled
                         style={styles.map}
                         originWhitelist={['*']}
-                        source={{ uri: `http://${ipAdd}:${port}/using-map/${location.coords.longitude}/${location.coords.latitude}/35.21821/31.768319` }}
+                        source={{ uri: `http://${ipAdd}:${port}/using-map/${location.coords.longitude}/${location.coords.latitude}/${garageLocation.longitude}/${garageLocation.latitude}` }}
                     /> : null}
                 </View>
-            </ScrollView>
-        </View>
+            </ScrollView >
+        </View >
     )
 }
 
@@ -140,15 +172,15 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontStyle: 'italic',
         fontSize: 18,
+        marginHorizontal: 10,
     },
     headers: {
         fontSize: 16,
         marginTop: 15,
+        marginHorizontal: 10,
     },
     timeSlots: {
-        borderWidth: 1,
-        borderColor: 'green',
-        marginVertical: 10,
+        marginBottom: 10,
         padding: 10,
     },
     slot: {

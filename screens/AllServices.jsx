@@ -1,13 +1,18 @@
 import React from 'react'
 import { Text, View, StyleSheet, TouchableOpacity, FlatList, SafeAreaView } from "react-native"
 import Service from '../components/Service/Service'
-import { services } from './services'
 import DatePicker from 'react-native-neat-date-picker'
+import axios from 'axios'
+import { ipAdd, springPort } from '../global functions and info/global'
 
 const AllServices = () => {
 
     const [showDatePicker, setShowDatePicker] = React.useState(false)
     const [date, setDate] = React.useState(new Date().format('yyyy-MM-dd'))
+
+    const [maintenance, setMaintenance] = React.useState([])
+    const [electrical, setElectrical] = React.useState([])
+    const [carWashing, setCarWashing] = React.useState([])
 
     let d = new Date()
     d.setDate(d.getDate() - 1)
@@ -36,12 +41,24 @@ const AllServices = () => {
         return (
             <View style={styles.serviceType}>
                 <Text style={styles.typeTitle}>{item.title}</Text>
-                <FlatList
+                {item.title === 'Maintenance' ? <FlatList
                     nestedScrollEnabled={true}
-                    data={services}
+                    data={maintenance}
                     renderItem={renderList}
-                    keyExtractor={item => item.serviceId}
-                />
+                    keyExtractor={item => item.serviceID}
+                /> : null}
+                {item.title === 'Electrical Services' ? <FlatList
+                    nestedScrollEnabled={true}
+                    data={electrical}
+                    renderItem={renderList}
+                    keyExtractor={item => item.serviceID}
+                /> : null}
+                {item.title === 'Car Washing' ? <FlatList
+                    nestedScrollEnabled={true}
+                    data={carWashing}
+                    renderItem={renderList}
+                    keyExtractor={item => item.serviceID}
+                /> : null}
             </View>
         )
     }
@@ -52,6 +69,22 @@ const AllServices = () => {
             <Service item={item} />
         );
     };
+
+    React.useEffect(() => {
+        axios.get(`http://${ipAdd}:${springPort}/services/Maintenance/getAllServicesByDates/${date}`)
+            .then(response => {
+                setMaintenance(response.data)
+                console.log(response.data)
+            })
+        axios.get(`http://${ipAdd}:${springPort}/services/Electrical/getAllServicesByDates/${date}`)
+            .then(response => {
+                setElectrical(response.data)
+            })
+        axios.get(`http://${ipAdd}:${springPort}/services/Car%20Washing/getAllServicesByDates/${date}`)
+            .then(response => {
+                setCarWashing(response.data)
+            })
+    }, [date])
 
     return (
         <View style={styles.container}>

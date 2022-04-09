@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StyleSheet, View } from 'react-native';
 import AllServices from '../screens/AllServices';
 import ServiceDetails from '../screens/ServiceDetails';
+import GaragePage from '../screens/GaragePage';
 
 const Stack = createNativeStackNavigator();
 
@@ -11,6 +12,7 @@ const ServiceStack = () => {
             <Stack.Navigator>
                 <Stack.Screen options={{ headerShown: false }} name="Services" component={AllServices} />
                 <Stack.Screen options={{ headerShown: false }} name="Service Details" component={ServiceDetails} />
+                <Stack.Screen name="Garage" options={{ headerShown: false }} component={GaragePage} />
             </Stack.Navigator>
         </View>
     );
