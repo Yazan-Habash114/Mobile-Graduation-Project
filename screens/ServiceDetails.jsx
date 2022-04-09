@@ -59,7 +59,7 @@ const ServiceDetails = ({ route }) => {
                         Choose a suitable date to book the service
                     </Text>
                     <View style={styles.timeSlots}>
-                        <TouchableOpacity disabled={true} onPress={() => alert('hhh')}>
+                        <TouchableOpacity onPress={() => alert('hhh')}>
                             <Text style={styles.slot}>09:00 - 10:00</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => alert('hhh')}>

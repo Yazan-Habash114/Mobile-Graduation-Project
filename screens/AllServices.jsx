@@ -1,10 +1,24 @@
 import React from 'react'
-import { Text, View, StyleSheet, ScrollView, FlatList, SafeAreaView } from "react-native"
+import { Text, View, StyleSheet, TouchableOpacity, FlatList, SafeAreaView } from "react-native"
 import Service from '../components/Service/Service'
 import { services } from './services'
+import DatePicker from 'react-native-neat-date-picker'
 
 const AllServices = () => {
 
+    const [showDatePicker, setShowDatePicker] = React.useState(false)
+    const [date, setDate] = React.useState(new Date().format('yyyy-MM-dd'))
+
+    let d = new Date()
+    d.setDate(d.getDate() - 1)
+
+    // Date picker
+    const onConfirm = (date) => {
+        setShowDatePicker(false)
+        setDate(date.dateString)
+    }
+
+    // Flat List
     const sections = [
         {
             title: 'Maintenance'
@@ -17,6 +31,7 @@ const AllServices = () => {
         }
     ]
 
+    // Flat List
     const renderSections = ({ item }) => {
         return (
             <View style={styles.serviceType}>
@@ -31,6 +46,7 @@ const AllServices = () => {
         )
     }
 
+    // Flat List
     const renderList = ({ item }) => {
         return (
             <Service item={item} />
@@ -40,39 +56,35 @@ const AllServices = () => {
     return (
         <View style={styles.container}>
             <SafeAreaView style={{ width: '100%' }}>
+                <TouchableOpacity
+                    onPress={() => setShowDatePicker(true)}>
+                    <Text style={styles.chooseDate}>Choose Date</Text>
+                </TouchableOpacity>
+
+                <Text style={styles.dateSpan}>All services on {date}</Text>
+
+                <DatePicker
+                    isVisible={showDatePicker}
+                    mode={'single'}
+                    minDate={d}
+                    startDate={d}
+                    onCancel={() => setShowDatePicker(false)}
+                    onConfirm={onConfirm}
+                    colorOptions={{
+                        headerColor: 'rgb(200, 28, 48)',
+                        weekDaysColor: 'rgb(200, 28, 48)',
+                        selectedDateBackgroundColor: 'rgb(200, 28, 48)',
+                        confirmButtonColor: 'rgb(200, 28, 48)',
+                        changeYearModalColor: 'rgb(200, 28, 48)',
+                    }}
+                />
+
                 <FlatList
                     nestedScrollEnabled={true}
                     data={sections}
                     renderItem={renderSections}
                     keyExtractor={item => item.title}
                 />
-                {/* <View style={styles.serviceType}>
-                    <Text style={styles.typeTitle}>Maintenance</Text>
-                    <FlatList
-                        nestedScrollEnabled={true}
-                        data={services}
-                        renderItem={renderList}
-                        keyExtractor={item => item.serviceId}
-                    />
-                </View>
-                <View style={styles.serviceType}>
-                    <Text style={styles.typeTitle}>Electrical Services</Text>
-                    <FlatList
-                        nestedScrollEnabled={true}
-                        data={services}
-                        renderItem={renderList}
-                        keyExtractor={item => item.serviceId}
-                    />
-                </View>
-                <View style={styles.serviceType}>
-                    <Text style={styles.typeTitle}>Car Washing</Text>
-                    <FlatList
-                        nestedScrollEnabled={true}
-                        data={services}
-                        renderItem={renderList}
-                        keyExtractor={item => item.serviceId}
-                    />
-                </View> */}
             </SafeAreaView>
         </View>
     )
@@ -96,7 +108,26 @@ const styles = StyleSheet.create({
     typeTitle: {
         textAlign: 'center',
         fontSize: 20,
-        color: 'white'
+        color: 'white',
+        fontWeight: 'bold'
+    },
+    chooseDate: {
+        backgroundColor: 'rgb(200, 28, 48)',
+        color: 'white',
+        padding: 10,
+        textAlign: 'center',
+        fontSize: 17,
+        fontWeight: 'bold',
+        marginHorizontal: 10,
+        marginTop: 10,
+        borderRadius: 10,
+    },
+    dateSpan: {
+        marginHorizontal: 10,
+        marginVertical: 10,
+        color: 'white',
+        fontSize: 18,
+        fontStyle: 'italic',
     }
 })
 
