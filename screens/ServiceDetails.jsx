@@ -1,28 +1,70 @@
 import React from 'react'
 import { Text, View, StyleSheet, ScrollView, Image, TouchableOpacity, FlatList } from "react-native"
 import { WebView } from 'react-native-webview'
-import { ipAdd, port, apiKey } from "../global functions and info/global"
+import { ipAdd, apiKey, springPort } from "../global functions and info/global"
 import * as Location from 'expo-location'
 import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const ServiceDetails = ({ route }) => {
     const { service } = route.params
 
-    const [canDeliver, setCanDeliver] = React.useState(service.canDeliver)
-    const [slotTimes, setSlotTimes] = React.useState(service.slotTimes)
-    const [garageId, setGarageId] = React.useState(service.supportedGarageID)
-    const [garageLocation, setGarageLocation] = React.useState(service.supportedGarageLocation)
+    const [serviceID, setServiceID] = React.useState(null);
+    const [canDeliver, setCanDeliver] = React.useState(null);
+    const [slotTimes, setSlotTimes] = React.useState(null);
+    const [garageId, setGarageId] = React.useState(null);
+    const [garageLocation, setGarageLocation] = React.useState(null);
+
+    const [choosedSlot, setChoosedSlot] = React.useState(null);
+    const [reservedSlot, setReservedSlot] = React.useState(null);
 
     const [location, setLocation] = React.useState(null);
     const [errorMsg, setErrorMsg] = React.useState(null);
+    const [myAccountId, setMyAccountId] = React.useState(null);
+
+    React.useEffect(() => {
+        setServiceID(service.serviceID);
+        setCanDeliver(service.canDeliver);
+        setSlotTimes(service.slotTimes);
+        setGarageId(service.supportedGarageID);
+        setGarageLocation(service.supportedGarageLocation);
+    }, [slotTimes]);
 
     const navigation = useNavigation()
 
+    const changeSlotState = (slot) => {
+        setChoosedSlot(slot)
+    }
+
     const renderList = ({ item }) => {
+        AsyncStorage.getItem('id').then(value => {
+            setMyAccountId(parseInt(value))
+        })
+
+        if (item.booked && item.bookedUserID == myAccountId) {
+            setReservedSlot(item)
+        }
+
+        if (item.booked) {
+            if (myAccountId != item.bookedUserID) {
+                return (
+                    <TouchableOpacity disabled={true}>
+                        <Text style={styles.reservedSlot}>
+                            {item.startTime} - {item.endTime}, Reserved
+                        </Text>
+                    </TouchableOpacity>
+                )
+            }
+        }
         return (
-            <TouchableOpacity onPress={() => alert(item.slotTimeID)}>
-                <Text style={styles.slot}>{item.startTime} - {item.endTime}</Text>
+            <TouchableOpacity
+                disabled={reservedSlot && reservedSlot.slotTimeID != item.slotTimeID}
+                onPress={() => changeSlotState(item)}
+            >
+                <Text style={styles.slot}>
+                    {item.startTime} - {item.endTime}
+                </Text>
             </TouchableOpacity>
         );
     };
@@ -37,10 +79,10 @@ const ServiceDetails = ({ route }) => {
 
             let location = await Location.getCurrentPositionAsync({});
             setLocation(location);
-            console.log(location.coords.longitude)
-            console.log(location.coords.latitude)
-            console.log('GarageLocation: ' + garageLocation.longitude)
-            console.log('GarageLocation: ' + garageLocation.latitude)
+            // console.log(location.coords.longitude)
+            // console.log(location.coords.latitude)
+            // console.log('GarageLocation: ' + garageLocation.longitude)
+            // console.log('GarageLocation: ' + garageLocation.latitude)
         })();
     }, [])
 
@@ -89,6 +131,62 @@ const ServiceDetails = ({ route }) => {
                         />
                     </View>
 
+                    <Text style={styles.headers}>
+                        You have reserved: {reservedSlot ? (reservedSlot.startTime + " - " + reservedSlot.endTime) : "nothing"}
+                    </Text>
+
+                    <Text style={styles.headers}>
+                        You have choosed: {choosedSlot ? (choosedSlot.startTime + " - " + choosedSlot.endTime) : "nothing"}
+                    </Text>
+
+                    {
+                        reservedSlot ?
+                            (
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        axios.get(`http://${ipAdd}:${springPort}/users/${myAccountId}/garages/${garageId}/services/unBookService/${serviceID}/slotTime/${reservedSlot.slotTimeID}`)
+                                            .then(res => console.log(res.data))
+                                        let copy = [...slotTimes]
+                                        copy.some((obj) => {
+                                            if (obj.slotTimeID == reservedSlot.slotTimeID) {
+                                                obj.booked = false
+                                                obj.bookedUserID = -1
+                                                return true;    // breaks out of the loop
+                                            }
+                                        });
+                                        setReservedSlot(null)
+                                        setSlotTimes(copy)
+                                    }}
+                                >
+                                    <Text style={styles.confirmBooking}>Confirm Unbooking</Text>
+                                </TouchableOpacity>
+                            ) :
+                            (
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        if (choosedSlot != null) {
+                                            axios.get(`http://${ipAdd}:${springPort}/users/${myAccountId}/garages/${garageId}/services/bookService/${serviceID}/slotTime/${choosedSlot.slotTimeID}`)
+                                                .then(res => console.log(res.data))
+                                            let copy = [...slotTimes]
+                                            copy.some((obj) => {
+                                                if (obj.slotTimeID == choosedSlot.slotTimeID) {
+                                                    obj.booked = true
+                                                    obj.bookedUserID = myAccountId
+                                                    return true;    // breaks out of the loop
+                                                }
+                                            });
+                                            setReservedSlot(choosedSlot)
+                                            setSlotTimes(copy)
+                                        } else {
+                                            alert("You should choose a time to confirm booking")
+                                        }
+                                    }}
+                                >
+                                    <Text style={styles.confirmBooking}>Confirm Booking</Text>
+                                </TouchableOpacity>
+                            )
+                    }
+
                     {
                         canDeliver ? (
                             <Text style={styles.headers}>
@@ -108,12 +206,12 @@ const ServiceDetails = ({ route }) => {
                         ) : null
                     }
 
-                    {location != null ? <WebView
+                    {/* {location != null ? <WebView
                         nestedScrollEnabled
                         style={styles.map}
                         originWhitelist={['*']}
                         source={{ uri: `http://${ipAdd}:${port}/using-map/${location.coords.longitude}/${location.coords.latitude}/${garageLocation.longitude}/${garageLocation.latitude}` }}
-                    /> : null}
+                    /> : null} */}
                 </View>
             </ScrollView >
         </View >
@@ -185,6 +283,15 @@ const styles = StyleSheet.create({
     },
     slot: {
         fontSize: 18,
+        backgroundColor: 'rgb(200, 38, 58)',
+        marginVertical: 10,
+        padding: 10,
+        color: 'white',
+        borderRadius: 10,
+        textAlign: 'center',
+    },
+    reservedSlot: {
+        fontSize: 18,
         backgroundColor: 'black',
         marginVertical: 10,
         padding: 10,
@@ -209,6 +316,16 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 17,
         fontWeight: 'bold',
+    },
+    confirmBooking: {
+        fontSize: 18,
+        backgroundColor: '#333',
+        marginVertical: 10,
+        marginHorizontal: 10,
+        padding: 10,
+        color: 'white',
+        borderRadius: 10,
+        textAlign: 'center',
     }
 })
 
