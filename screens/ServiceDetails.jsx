@@ -119,7 +119,7 @@ const ServiceDetails = ({ route }) => {
                     <Text style={styles.description}>{service.serviceDescription}</Text>
 
                     <Text style={styles.headers}>
-                        Choose a suitable date to book the service
+                        Choose a suitable time to book the service
                     </Text>
 
                     <View style={styles.timeSlots}>
