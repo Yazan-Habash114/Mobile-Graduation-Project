@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, StyleSheet, TouchableOpacity, FlatList, SafeAreaView } from "react-native"
+import { View, StyleSheet, FlatList, SafeAreaView } from "react-native"
 import axios from 'axios'
 import { ipAdd, springPort } from '../global functions and info/global'
 import Garage from '../components/Garage/Garage'
@@ -42,6 +42,10 @@ const styles = StyleSheet.create({
         alignItems: 'stretch',
         backgroundColor: '#3f3f3f'
     },
+    img: {
+        width: 100,
+        height: 100,
+    }
 })
 
 export default AllServices

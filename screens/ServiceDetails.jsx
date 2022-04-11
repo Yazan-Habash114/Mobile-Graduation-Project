@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, StyleSheet, ScrollView, Image, TouchableOpacity, FlatList } from "react-native"
+import { Text, View, StyleSheet, Image, TouchableOpacity, FlatList } from "react-native"
 import { WebView } from 'react-native-webview'
 import { ipAdd, apiKey, springPort } from "../global functions and info/global"
 import * as Location from 'expo-location'
@@ -26,13 +26,12 @@ const ServiceDetails = ({ route }) => {
     const [myAccountId, setMyAccountId] = React.useState(null);
 
     React.useEffect(() => {
+        axios.get(`http://${ipAdd}:${springPort}/garages/${service.supportedGarageID}`).then(response => setGarage(response.data)).catch(error => alert('error'))
         setServiceID(service.serviceID);
         setCanDeliver(service.canDeliver);
         setSlotTimes(service.slotTimes);
         setGarageId(service.supportedGarageID);
         setGarageLocation(service.supportedGarageLocation);
-
-        axios.get(`http://${ipAdd}:${springPort}/garages/${service.supportedGarageID}`).then(response => setGarage(response.data)).catch(error => alert('error'))
     }, [slotTimes]);
 
     const navigation = useNavigation()
