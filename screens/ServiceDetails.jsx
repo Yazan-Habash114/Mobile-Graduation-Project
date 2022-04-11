@@ -35,6 +35,8 @@ const ServiceDetails = ({ route }) => {
 
     const changeSlotState = (slot) => {
         setChoosedSlot(slot)
+        // console.log(service)
+        // console.log(slot)
     }
 
     const renderList = ({ item }) => {
@@ -131,12 +133,12 @@ const ServiceDetails = ({ route }) => {
                         />
                     </View>
 
-                    <Text style={styles.headers}>
-                        You have reserved: {reservedSlot ? (reservedSlot.startTime + " - " + reservedSlot.endTime) : "nothing"}
+                    <Text style={styles.choosenReserved}>
+                        You have choosen: {choosedSlot ? (choosedSlot.startTime + " - " + choosedSlot.endTime) : "nothing"}
                     </Text>
 
-                    <Text style={styles.headers}>
-                        You have choosed: {choosedSlot ? (choosedSlot.startTime + " - " + choosedSlot.endTime) : "nothing"}
+                    <Text style={styles.choosenReserved}>
+                        You have reserved: {reservedSlot ? (reservedSlot.startTime + " - " + reservedSlot.endTime) : "nothing"}
                     </Text>
 
                     {
@@ -158,7 +160,7 @@ const ServiceDetails = ({ route }) => {
                                         setSlotTimes(copy)
                                     }}
                                 >
-                                    <Text style={styles.confirmBooking}>Confirm Unbooking</Text>
+                                    <Text style={styles.confirmUnbooking}>Confirm Unbooking</Text>
                                 </TouchableOpacity>
                             ) :
                             (
@@ -278,7 +280,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
     },
     timeSlots: {
-        marginBottom: 10,
         padding: 10,
     },
     slot: {
@@ -306,7 +307,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
     },
     order: {
-        backgroundColor: 'black',
+        backgroundColor: '#333',
         margin: 10,
         paddingVertical: 15,
         borderRadius: 10,
@@ -317,7 +318,22 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: 'bold',
     },
+    choosenReserved: {
+        fontSize: 18,
+        marginHorizontal: 10,
+        fontWeight: 'bold',
+    },
     confirmBooking: {
+        fontSize: 18,
+        backgroundColor: 'rgb(200, 38, 58)',
+        marginVertical: 10,
+        marginHorizontal: 10,
+        padding: 10,
+        color: 'white',
+        borderRadius: 10,
+        textAlign: 'center',
+    },
+    confirmUnbooking: {
         fontSize: 18,
         backgroundColor: '#333',
         marginVertical: 10,
@@ -326,7 +342,7 @@ const styles = StyleSheet.create({
         color: 'white',
         borderRadius: 10,
         textAlign: 'center',
-    }
+    },
 })
 
 export default ServiceDetails

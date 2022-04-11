@@ -74,15 +74,14 @@ const AllServices = () => {
         axios.get(`http://${ipAdd}:${springPort}/services/Maintenance/getAllServicesByDates/${date}`)
             .then(response => {
                 setMaintenance(response.data)
-                // console.log(response.data)
             })
         axios.get(`http://${ipAdd}:${springPort}/services/Electrical/getAllServicesByDates/${date}`)
             .then(response => {
-                // setElectrical(response.data)
+                setElectrical(response.data)
             })
         axios.get(`http://${ipAdd}:${springPort}/services/Car%20Washing/getAllServicesByDates/${date}`)
             .then(response => {
-                // setCarWashing(response.data)
+                setCarWashing(response.data)
             })
     }, [date])
 
