@@ -1,15 +1,15 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StyleSheet, View } from 'react-native';
 import GaragePage from '../screens/GaragePage';
-import Map from '../screens/Map';
+import AllGarages from '../screens/AllGarages';
 
 const Stack = createNativeStackNavigator();
 
-const ProfileStack = () => {
+const ServiceStack = () => {
     return (
         <View style={styles.container}>
             <Stack.Navigator>
-                <Stack.Screen options={{ headerShown: false }} name="iDrive Map" component={Map} />
+                <Stack.Screen name="All Garages" component={AllGarages} />
                 <Stack.Screen name="Garage Page" component={GaragePage} />
             </Stack.Navigator>
         </View>
@@ -23,4 +23,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default ProfileStack;
+export default ServiceStack;

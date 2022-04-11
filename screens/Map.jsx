@@ -40,7 +40,7 @@ const Map = () => {
           console.log("EVENT-DATA:", event);
           setId(event.nativeEvent.data);
           console.log(id)
-          navigation.navigate('Garage', {
+          navigation.navigate('Garage Page', {
             garageId: id,
           })
         }}

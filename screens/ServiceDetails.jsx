@@ -13,6 +13,8 @@ const ServiceDetails = ({ route }) => {
     const [serviceID, setServiceID] = React.useState(null);
     const [canDeliver, setCanDeliver] = React.useState(null);
     const [slotTimes, setSlotTimes] = React.useState(null);
+
+    const [garage, setGarage] = React.useState(null);
     const [garageId, setGarageId] = React.useState(null);
     const [garageLocation, setGarageLocation] = React.useState(null);
 
@@ -29,14 +31,14 @@ const ServiceDetails = ({ route }) => {
         setSlotTimes(service.slotTimes);
         setGarageId(service.supportedGarageID);
         setGarageLocation(service.supportedGarageLocation);
+
+        axios.get(`http://${ipAdd}:${springPort}/garages/${service.supportedGarageID}`).then(response => setGarage(response.data)).catch(error => alert('error'))
     }, [slotTimes]);
 
     const navigation = useNavigation()
 
     const changeSlotState = (slot) => {
         setChoosedSlot(slot)
-        // console.log(service)
-        // console.log(slot)
     }
 
     const components = [{ title: "image" }, { title: "content" }]
@@ -55,15 +57,19 @@ const ServiceDetails = ({ route }) => {
                     <Text style={styles.title}>{service.name}</Text>
                     <View style={styles.info}>
                         <View style={styles.keys}>
-                            <Text style={styles.key}>Supporting Garage: </Text>
+                            {garage ?
+                                <Text style={styles.key}>Supporting Garage: </Text> : null
+                            }
                             <Text style={styles.key}>Price: </Text>
                         </View>
                         <View style={styles.values}>
-                            <TouchableOpacity onPress={() => navigation.navigate('Garage', {
-                                garageId: garageId,
-                            })}>
-                                <Text style={styles.value}>{service.supportedGarageName}</Text>
-                            </TouchableOpacity>
+                            {garage ?
+                                <TouchableOpacity onPress={() => navigation.navigate('Garage Page', {
+                                    garage: garage,
+                                })}>
+                                    <Text style={styles.value}>{garage.garageName}</Text>
+                                </TouchableOpacity> : null
+                            }
                             <Text style={styles.value}>${service.price}</Text>
                         </View>
                     </View>

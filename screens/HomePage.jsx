@@ -12,11 +12,11 @@ const HomePage = () => {
             <Text>Home screen</Text>
             <Button
                 title="All Services"
-                onPress={() => navigation.navigate('All Services')}
+                onPress={() => navigation.navigate('Service Stack')}
             />
             <Button
                 title="All Garages"
-                onPress={() => navigation.navigate('All Garages')}
+                onPress={() => navigation.navigate('Garage Stack')}
             />
         </View>
     )
