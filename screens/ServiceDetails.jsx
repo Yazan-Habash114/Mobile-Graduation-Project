@@ -39,69 +39,18 @@ const ServiceDetails = ({ route }) => {
         // console.log(slot)
     }
 
-    const renderList = ({ item }) => {
-        AsyncStorage.getItem('id').then(value => {
-            setMyAccountId(parseInt(value))
-        })
+    const components = [{ title: "image" }, { title: "content" }]
 
-        if (item.booked && item.bookedUserID == myAccountId) {
-            setReservedSlot(item)
-        }
-
-        if (item.booked) {
-            if (myAccountId != item.bookedUserID) {
-                return (
-                    <TouchableOpacity disabled={true}>
-                        <Text style={styles.reservedSlot}>
-                            {item.startTime} - {item.endTime}, Reserved
-                        </Text>
-                    </TouchableOpacity>
-                )
-            }
-        }
-        return (
-            <TouchableOpacity
-                disabled={reservedSlot && reservedSlot.slotTimeID != item.slotTimeID}
-                onPress={() => changeSlotState(item)}
-            >
-                <Text style={styles.slot}>
-                    {item.startTime} - {item.endTime}
-                </Text>
-            </TouchableOpacity>
-        );
-    };
-
-    React.useEffect(() => {
-        (async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-                setErrorMsg('Permission to access location was denied');
-                return;
-            }
-
-            let location = await Location.getCurrentPositionAsync({});
-            setLocation(location);
-            // console.log(location.coords.longitude)
-            // console.log(location.coords.latitude)
-            // console.log('GarageLocation: ' + garageLocation.longitude)
-            // console.log('GarageLocation: ' + garageLocation.latitude)
-        })();
-    }, [])
-
-    let text = 'Waiting..';
-    if (errorMsg) {
-        text = errorMsg;
-    } else if (location) {
-        text = JSON.stringify(location);
-    }
-
-    return (
-        <View style={styles.container}>
-            <ScrollView contentContainerStyle={{ width: '100%' }}>
+    const renderComponents = ({ item }) => {
+        if (item.title === 'image') {
+            return (
                 <Image
                     source={require('../assets/images/iDrive_New.jpg')}
                     style={styles.img}
                 />
+            )
+        } else if (item.title === 'content') {
+            return (
                 <View style={styles.content}>
                     <Text style={styles.title}>{service.name}</Text>
                     <View style={styles.info}>
@@ -215,7 +164,74 @@ const ServiceDetails = ({ route }) => {
                         source={{ uri: `http://${ipAdd}:${port}/using-map/${location.coords.longitude}/${location.coords.latitude}/${garageLocation.longitude}/${garageLocation.latitude}` }}
                     /> : null} */}
                 </View>
-            </ScrollView >
+            )
+        }
+    }
+
+    const renderList = ({ item }) => {
+        AsyncStorage.getItem('id').then(value => {
+            setMyAccountId(parseInt(value))
+        })
+
+        if (item.booked && item.bookedUserID == myAccountId) {
+            setReservedSlot(item)
+        }
+
+        if (item.booked) {
+            if (myAccountId != item.bookedUserID) {
+                return (
+                    <TouchableOpacity disabled={true}>
+                        <Text style={styles.reservedSlot}>
+                            {item.startTime} - {item.endTime}, Reserved
+                        </Text>
+                    </TouchableOpacity>
+                )
+            }
+        }
+        return (
+            <TouchableOpacity
+                disabled={reservedSlot && reservedSlot.slotTimeID != item.slotTimeID}
+                onPress={() => changeSlotState(item)}
+            >
+                <Text style={styles.slot}>
+                    {item.startTime} - {item.endTime}
+                </Text>
+            </TouchableOpacity>
+        );
+    };
+
+    React.useEffect(() => {
+        (async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                setErrorMsg('Permission to access location was denied');
+                return;
+            }
+
+            let location = await Location.getCurrentPositionAsync({});
+            setLocation(location);
+            // console.log(location.coords.longitude)
+            // console.log(location.coords.latitude)
+            // console.log('GarageLocation: ' + garageLocation.longitude)
+            // console.log('GarageLocation: ' + garageLocation.latitude)
+        })();
+    }, [])
+
+    let text = 'Waiting..';
+    if (errorMsg) {
+        text = errorMsg;
+    } else if (location) {
+        text = JSON.stringify(location);
+    }
+
+    return (
+        <View style={styles.container}>
+            <FlatList
+                nestedScrollEnabled={true}
+                data={components}
+                renderItem={renderComponents}
+                keyExtractor={item => item.title}
+            />
         </View >
     )
 }
