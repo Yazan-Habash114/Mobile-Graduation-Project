@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
-import { Text, View, StyleSheet, ScrollView, Image, TextInput, TouchableOpacity } from 'react-native'
+import { Text, View, StyleSheet, ScrollView, Image, TextInput, TouchableOpacity, Button } from 'react-native'
 import { Picker } from '@react-native-picker/picker'
 import axios from 'axios'
 import { ipAdd, springPort } from '../global functions and info/global'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 import { Feather } from '@expo/vector-icons'
 
-const EditService = ({ route }) => {
-    const { service } = route.params
+const AddService = ({ route }) => {
+    const { garage } = route.params
 
     // Date Time picker state
     const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
@@ -42,17 +42,17 @@ const EditService = ({ route }) => {
     };
 
     // States
-    const [name, setName] = useState(service.serviceName)
-    const [canDeliver, setCanDeliver] = useState(service.canDeliver)
-    const [description, setDescription] = useState(service.serviceDescription)
-    const [price, setPrice] = useState(service.price)
-    const [time, setTime] = useState(service.serviceTime)
-    const [type, setType] = useState(service.serviceType)
+    const [name, setName] = useState('')
+    const [canDeliver, setCanDeliver] = useState(false)
+    const [description, setDescription] = useState('')
+    const [price, setPrice] = useState(0)
+    const [time, setTime] = useState('00:00:00')
+    const [type, setType] = useState('23:59:59')
 
-    const saveChanges = () => {
+    const addService = () => {
         if (name !== '' && description !== '' && !Number.isNaN(price) && time !== '' && type !== '') {
             axios.post(
-                `http://${ipAdd}:${springPort}/services/${service.serviceID}/editService`,
+                `http://${ipAdd}:${springPort}/garages/${garage.garageID}/services/addServiceToGarage`,
                 {
                     serviceName: name,
                     serviceType: type,
@@ -67,7 +67,7 @@ const EditService = ({ route }) => {
                         "Accept": "application/json"
                     }
                 }
-            ).then(() => alert('The service has been updated'))
+            ).then(() => alert('The service has been added'))
         } else {
             alert('Check all fields filled')
         }
@@ -78,10 +78,10 @@ const EditService = ({ route }) => {
             <ScrollView contentContainerStyle={{ width: '100%' }}>
                 <Image
                     style={styles.img}
-                    source={{ uri: `http://${ipAdd}:${springPort}/garages/${service.supportedGarageID}/profileImage/-1` }}
+                    source={{ uri: `http://${ipAdd}:${springPort}/garages/${garage.garageID}/profileImage/-1` }}
                 />
 
-                <Text style={styles.serviceName}>{service.serviceName}</Text>
+                <Text style={styles.serviceName}>{garage.garageName}</Text>
 
                 <View style={styles.form}>
                     <View style={styles.slot}>
@@ -90,7 +90,6 @@ const EditService = ({ route }) => {
                             style={styles.input}
                             placeholder="Name"
                             placeholderTextColor="#a8a8a8"
-                            defaultValue={service.serviceName}
                             onChangeText={text => setName(text)}
                         />
                     </View>
@@ -101,7 +100,6 @@ const EditService = ({ route }) => {
                             style={styles.input}
                             placeholder="Price"
                             placeholderTextColor="#a8a8a8"
-                            defaultValue={"" + service.price}
                             keyboardType="numeric"
                             onChangeText={text => setPrice(parseFloat(text))}
                         />
@@ -113,7 +111,6 @@ const EditService = ({ route }) => {
                             style={styles.input}
                             placeholder="Description"
                             placeholderTextColor="#a8a8a8"
-                            defaultValue={service.serviceDescription}
                             onChangeText={text => setDescription(text)}
                         />
                     </View>
@@ -157,15 +154,15 @@ const EditService = ({ route }) => {
                         <Picker
                             style={styles.dropList}
                             onValueChange={(itemValue, itemIndex) => setCanDeliver(itemValue)}
-                            selectedValue={service.canDeliver}
+                            selectedValue={canDeliver}
                         >
                             <Picker.Item label="True" value={true} />
                             <Picker.Item label="False" value={false} />
                         </Picker>
                     </View>
 
-                    <TouchableOpacity onPress={saveChanges}>
-                        <Text style={styles.confirm}>Save Changes</Text>
+                    <TouchableOpacity onPress={addService}>
+                        <Text style={styles.confirm}>Add Service</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>
@@ -262,4 +259,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default EditService
+export default AddService

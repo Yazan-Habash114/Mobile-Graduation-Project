@@ -5,6 +5,7 @@ import AllGarages from '../screens/AllGarages';
 import GarageServices from '../screens/GarageServices';
 import ServiceDetails from '../screens/ServiceDetails';
 import EditService from '../screens/EditService';
+import AddService from '../screens/AddService';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +18,7 @@ const ServiceStack = () => {
                 <Stack.Screen name="Garage Services" component={GarageServices} />
                 <Stack.Screen name="Service Details" component={ServiceDetails} />
                 <Stack.Screen name="Edit Service" component={EditService} />
+                <Stack.Screen name="Add New Service" component={AddService} />
             </Stack.Navigator>
         </View>
     );

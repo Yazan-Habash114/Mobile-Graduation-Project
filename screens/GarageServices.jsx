@@ -4,9 +4,13 @@ import Service from '../components/Service/Service'
 import DatePicker from 'react-native-neat-date-picker'
 import axios from 'axios'
 import { ipAdd, springPort } from '../global functions and info/global'
+import { Ionicons } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
 
 const GarageServices = ({ route }) => {
     const { garage } = route.params
+
+    const navigation = useNavigation()
 
     const [showDatePicker, setShowDatePicker] = React.useState(false)
     const [date, setDate] = React.useState(new Date().format('yyyy-MM-dd'))
@@ -90,6 +94,15 @@ const GarageServices = ({ route }) => {
         <View style={styles.container}>
             <SafeAreaView style={{ width: '100%', paddingBottom: 90, }}>
                 <TouchableOpacity
+                    style={styles.addService}
+                    onPress={() => navigation.navigate('Add New Service', {
+                        garage: garage
+                    })}>
+                    <Text style={styles.addServiceText}>Add New Service</Text>
+                    <Ionicons name="add" size={24} color="white" />
+                </TouchableOpacity>
+
+                <TouchableOpacity
                     onPress={() => setShowDatePicker(true)}>
                     <Text style={styles.chooseDate}>Choose Date</Text>
                 </TouchableOpacity>
@@ -143,6 +156,21 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: 'white',
         fontWeight: 'bold'
+    },
+    addService: {
+        backgroundColor: 'rgb(200, 28, 48)',
+        padding: 10,
+        marginHorizontal: 10,
+        borderRadius: 10,
+        marginTop: 10,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    addServiceText: {
+        color: 'white',
+        fontSize: 17,
+        fontWeight: 'bold',
     },
     chooseDate: {
         backgroundColor: 'rgb(200, 28, 48)',
