@@ -88,7 +88,7 @@ const GarageServices = ({ route }) => {
 
     return (
         <View style={styles.container}>
-            <SafeAreaView style={{ width: '100%' }}>
+            <SafeAreaView style={{ width: '100%', paddingBottom: 90, }}>
                 <TouchableOpacity
                     onPress={() => setShowDatePicker(true)}>
                     <Text style={styles.chooseDate}>Choose Date</Text>

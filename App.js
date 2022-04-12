@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function App() {
   AsyncStorage.setItem('loggedIn', 'true')
   AsyncStorage.setItem('id', '5')
+  AsyncStorage.setItem('account', 'GARAGE')
 
   return (
     <TouchableWithoutFeedback onPress={() => dismissKeyboard()}>

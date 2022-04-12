@@ -1,6 +1,7 @@
 import React from 'react'
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native"
 import { useNavigation } from '@react-navigation/native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Service = ({ item }) => {
 
@@ -8,9 +9,19 @@ const Service = ({ item }) => {
 
     return (
         <TouchableOpacity
-            onPress={() => navigation.navigate('Service Details', {
-                service: item
-            })}
+            onPress={() => {
+                AsyncStorage.getItem('account').then(value => {
+                    if (value === 'GARAGE') {
+                        navigation.navigate('Edit Service', {
+                            service: item
+                        })
+                    } else {
+                        navigation.navigate('Service Details', {
+                            service: item
+                        })
+                    }
+                })
+            }}
             style={styles.container}
         >
             <Text style={styles.name}>{item.serviceName}</Text>
