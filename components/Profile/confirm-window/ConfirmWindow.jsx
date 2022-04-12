@@ -11,13 +11,13 @@ const ConfirmWindow = ({ setShowWindow }) => {
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={() => setShowWindow(false)}>
-                <MaterialIcons name="cancel" size={38} color="rgb(190, 18, 48)" />
+                <MaterialIcons name="cancel" size={38} color="#fdcb6e" />
             </TouchableOpacity>
             <View style={styles.form}>
                 <TextInput
                     style={styles.input}
                     placeholder="Type your password..."
-                    placeholderTextColor={"#a8a8a8"}
+                    placeholderTextColor={"#2d3436"}
                     secureTextEntry={true}
                 />
                 <Button
@@ -30,7 +30,7 @@ const ConfirmWindow = ({ setShowWindow }) => {
                         // navigation.navigate('Login/Register')
                     }}
                     title="Delete Account"
-                    color="rgb(190, 18, 48)"
+                    color="#fdcb6e"
                 />
             </View>
         </View>
@@ -39,7 +39,7 @@ const ConfirmWindow = ({ setShowWindow }) => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#383838',
+        backgroundColor: '#2d3436',
         position: 'absolute',
         left: '20%',
         top: '70%',
@@ -63,13 +63,13 @@ const styles = StyleSheet.create({
         alignItems: 'stretch',
     },
     input: {
-        backgroundColor: 'black',
+        backgroundColor: '#dfe6e9',
         padding: 5,
         paddingLeft: 7,
         color: 'white',
         fontSize: 17,
         borderWidth: 2,
-        borderColor: "rgb(200, 28, 58)",
+        borderColor: "#fdcb6e",
         marginBottom: 10,
         borderRadius: 6,
         width: '100%',
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     },
     label: {
         color: 'white',
-        marginTop: 5
+        marginTop: 5,
     }
 })
 

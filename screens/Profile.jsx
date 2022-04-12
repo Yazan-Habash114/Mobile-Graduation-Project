@@ -59,11 +59,11 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        backgroundColor: '#595959'
+        backgroundColor: '#636e72',
     },
     img: {
         width: '100%',
-        height: 220
+        height: 220,
     },
     info: {
         display: 'flex',
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
         }]
     },
     infoItem: {
-        color: 'white',
+        color: '#fdcb6e',
         fontSize: 18,
     },
     bar: {
@@ -87,8 +87,8 @@ const styles = StyleSheet.create({
     },
     barElements: {
         fontSize: 18,
-        color: 'white',
-        backgroundColor: 'rgb(210, 38, 68)',
+        color: '#dfe6e9',
+        backgroundColor: '#d63031',
         padding: 5,
         borderRadius: 5,
         marginVertical: 5,

@@ -6,6 +6,7 @@ import axios from 'axios'
 import { ipAdd, springPort } from '../global functions and info/global'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const GarageServices = ({ route }) => {
     const { garage } = route.params
@@ -18,6 +19,9 @@ const GarageServices = ({ route }) => {
     const [maintenance, setMaintenance] = React.useState([])
     const [electrical, setElectrical] = React.useState([])
     const [carWashing, setCarWashing] = React.useState([])
+
+    // Authentication
+    const [auth, setAuth] = React.useState(false)
 
     let d = new Date()
     d.setDate(d.getDate() - 1)
@@ -76,6 +80,14 @@ const GarageServices = ({ route }) => {
     };
 
     React.useEffect(() => {
+        AsyncStorage.getItem('account').then(value => {
+            if (value === 'GARAGE') {
+                setAuth(true)
+            }
+        })
+    }, [])
+
+    React.useEffect(() => {
         axios.get(`http://${ipAdd}:${springPort}/garages/${garage.garageID}/services/Maintenance/byDate/${date}`)
             .then(response => {
                 setMaintenance(response.data)
@@ -93,14 +105,17 @@ const GarageServices = ({ route }) => {
     return (
         <View style={styles.container}>
             <SafeAreaView style={{ width: '100%', paddingBottom: 90, }}>
-                <TouchableOpacity
-                    style={styles.addService}
-                    onPress={() => navigation.navigate('Add New Service', {
-                        garage: garage
-                    })}>
-                    <Text style={styles.addServiceText}>Add New Service</Text>
-                    <Ionicons name="add" size={24} color="white" />
-                </TouchableOpacity>
+
+                {
+                    auth ? <TouchableOpacity
+                        style={styles.addService}
+                        onPress={() => navigation.navigate('Add New Service', {
+                            garage: garage
+                        })}>
+                        <Text style={styles.addServiceText}>Add New Service</Text>
+                        <Ionicons name="add" size={24} color="white" />
+                    </TouchableOpacity> : null
+                }
 
                 <TouchableOpacity
                     onPress={() => setShowDatePicker(true)}>
@@ -140,12 +155,12 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'stretch',
-        backgroundColor: '#3f3f3f'
+        backgroundColor: '#636e72'
     },
     serviceType: {
         marginHorizontal: 10,
         borderWidth: 2,
-        borderColor: 'white',
+        borderColor: '#b2bec3',
         borderTopWidth: 0,
         borderRadius: 15,
         marginVertical: 15,
@@ -154,11 +169,11 @@ const styles = StyleSheet.create({
     typeTitle: {
         textAlign: 'center',
         fontSize: 20,
-        color: 'white',
+        color: '#dfe6e9',
         fontWeight: 'bold'
     },
     addService: {
-        backgroundColor: 'rgb(200, 28, 48)',
+        backgroundColor: '#00b894',
         padding: 10,
         marginHorizontal: 10,
         borderRadius: 10,
@@ -168,13 +183,13 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     addServiceText: {
-        color: 'white',
+        color: '#dfe6e9',
         fontSize: 17,
         fontWeight: 'bold',
     },
     chooseDate: {
-        backgroundColor: 'rgb(200, 28, 48)',
-        color: 'white',
+        backgroundColor: '#2d3436',
+        color: '#dfe6e9',
         padding: 10,
         textAlign: 'center',
         fontSize: 17,
@@ -186,7 +201,7 @@ const styles = StyleSheet.create({
     dateSpan: {
         marginHorizontal: 10,
         marginVertical: 10,
-        color: 'white',
+        color: '#dfe6e9',
         fontSize: 18,
         fontStyle: 'italic',
     }

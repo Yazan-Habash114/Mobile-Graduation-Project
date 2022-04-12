@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'stretch',
-        backgroundColor: '#3f3f3f'
+        backgroundColor: '#636e72'
     },
     img: {
         width: 100,

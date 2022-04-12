@@ -36,23 +36,23 @@ const Service = ({ item }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'rgb(200, 28, 48)',
+        backgroundColor: '#d63031',
         marginVertical: 10,
         padding: 15,
         borderRadius: 15,
         display: 'flex',
     },
     name: {
-        color: '#222',
+        color: '#ffeaa7',
         fontSize: 20,
         fontWeight: 'bold',
         borderBottomWidth: 2,
-        borderBottomColor: '#222',
+        borderBottomColor: '#ffeaa7',
         paddingBottom: 5,
     },
     text: {
         fontSize: 17,
-        color: '#ddd',
+        color: '#dfe6e9',
         marginTop: 10,
     },
     subSection: {

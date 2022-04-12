@@ -244,21 +244,25 @@ const ServiceDetails = ({ route }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#636e72'
     },
     img: {
         width: '100%',
         height: 200,
     },
     content: {
-        borderWidth: 2,
-        borderColor: 'orange',
+        borderWidth: 4,
+        borderColor: '#d63031',
+        margin: 5,
+        borderRadius: 10,
         display: 'flex',
         alignItems: 'stretch',
     },
     title: {
         textAlign: 'center',
         fontSize: 24,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        color: '#dfe6e9',
     },
     info: {
         marginVertical: 10,
@@ -284,40 +288,45 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 16,
         marginLeft: 30,
+        color: '#00cec9',
     },
     value: {
         fontSize: 16,
         marginLeft: 30,
+        color: '#81ecec',
+        textAlign: 'center',
     },
     description: {
         textAlign: 'center',
         fontStyle: 'italic',
         fontSize: 18,
         marginHorizontal: 10,
+        color: '#55efc4',
     },
     headers: {
         fontSize: 16,
         marginTop: 15,
         marginHorizontal: 10,
+        color: '#00cec9',
     },
     timeSlots: {
         padding: 10,
     },
     slot: {
         fontSize: 18,
-        backgroundColor: 'rgb(200, 38, 58)',
+        backgroundColor: '#d63031',
         marginVertical: 10,
         padding: 10,
-        color: 'white',
+        color: '#dfe6e9',
         borderRadius: 10,
         textAlign: 'center',
     },
     reservedSlot: {
         fontSize: 18,
-        backgroundColor: 'black',
+        backgroundColor: '#222',
         marginVertical: 10,
         padding: 10,
-        color: 'white',
+        color: '#dfe6e9',
         borderRadius: 10,
         textAlign: 'center',
     },
@@ -328,13 +337,13 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
     },
     order: {
-        backgroundColor: '#333',
+        backgroundColor: '#2d3436',
         margin: 10,
         paddingVertical: 15,
         borderRadius: 10,
     },
     orderText: {
-        color: 'white',
+        color: '#dfe6e9',
         textAlign: 'center',
         fontSize: 17,
         fontWeight: 'bold',
@@ -343,10 +352,11 @@ const styles = StyleSheet.create({
         fontSize: 18,
         marginHorizontal: 10,
         fontWeight: 'bold',
+        color: '#55efc4',
     },
     confirmBooking: {
         fontSize: 18,
-        backgroundColor: 'rgb(200, 38, 58)',
+        backgroundColor: '#d63031',
         marginVertical: 10,
         marginHorizontal: 10,
         padding: 10,

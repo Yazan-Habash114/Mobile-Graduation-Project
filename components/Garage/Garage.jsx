@@ -2,15 +2,42 @@ import React from 'react'
 import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native"
 import { useNavigation } from '@react-navigation/native'
 import { ipAdd, springPort } from '../../global functions and info/global'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Service = ({ item }) => {
 
     const navigation = useNavigation()
+
+    // Authentication
+    const [auth, setAuth] = React.useState(false)
+
+    React.useEffect(() => {
+        let idCheck = false
+        let accountType = ''
+        AsyncStorage.getItem('id').then(value => {
+            if (parseInt(value) === item.garageID) {
+                idCheck = true
+            }
+            AsyncStorage.getItem('account').then(value => {
+                if (value === 'GARAGE') {
+                    accountType = 'GARAGE'
+                } else if (value === 'USER') {
+                    accountType = 'USER'
+                }
+                if (idCheck || accountType === 'USER') {
+                    setAuth(true)
+                }
+            })
+        })
+    }, [])
+
     return (
         <TouchableOpacity
-            onPress={() => navigation.navigate('Garage Page', {
-                garage: item
-            })}
+            onPress={() => {
+                auth ? navigation.navigate('Garage Page', {
+                    garage: item
+                }) : null
+            }}
             style={styles.container}
         >
             <Image
@@ -35,7 +62,7 @@ const Service = ({ item }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#222',
+        backgroundColor: '#2d3436',
         marginVertical: 10,
         marginHorizontal: 10,
         padding: 15,
@@ -51,7 +78,7 @@ const styles = StyleSheet.create({
         marginRight: 25,
     },
     name: {
-        color: 'white',
+        color: '#d63031',
         fontSize: 24,
         fontWeight: 'bold',
     },
@@ -60,7 +87,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     closed: {
-        color: 'rgb(200, 38, 50)',
+        color: '#d63031',
         fontSize: 16,
     },
     carType: {

@@ -58,7 +58,7 @@ const GaragePage = ({ route }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#3f3f3f',
+        backgroundColor: '#636e72',
     },
     img: {
         width: '100%',
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     info: {
         borderWidth: 2,
         padding: 10,
-        borderColor: '#e74c3c',
+        borderColor: '#d63031',
         borderBottomLeftRadius: 15,
         borderTopEndRadius: 15,
         marginHorizontal: 10,
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     },
     rowValueClosed: {
         fontSize: 18,
-        color: '#c0392b',
+        color: '#d63031',
     },
     rowValueOpen: {
         fontSize: 18,
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     services: {
         fontSize: 22,
         textAlign: 'center',
-        backgroundColor: '#e74c3c',
+        backgroundColor: '#d63031',
         marginHorizontal: 10,
         marginVertical: 10,
         borderRadius: 10,

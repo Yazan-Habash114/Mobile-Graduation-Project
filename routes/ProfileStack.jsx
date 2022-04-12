@@ -11,7 +11,7 @@ const ProfileStack = () => {
     return (
         <View style={styles.container}>
             <Stack.Navigator>
-                <Stack.Screen options={{ headerShown: false }} name="Profile" component={Profile} />
+                <Stack.Screen name="Profile" component={Profile} />
                 <Stack.Screen name="Edit your profile" component={EditProfile} />
                 <Stack.Screen name="Your ordered services" component={OrderServices} />
                 <Stack.Screen name="Your cart" component={Cart} />

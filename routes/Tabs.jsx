@@ -26,8 +26,8 @@ export default function App() {
                         // You can return any component that you like here!
                         return <Ionicons name={iconName} size={size} color={color} />;
                     },
-                    tabBarActiveTintColor: 'rgb(210, 38, 68)',
-                    tabBarInactiveTintColor: 'gray',
+                    tabBarActiveTintColor: '#d63031',
+                    tabBarInactiveTintColor: '#2d3436',
                 })}
             >
                 <Tab.Screen options={{ headerShown: false }} name="HomePage" component={HomeStack} />

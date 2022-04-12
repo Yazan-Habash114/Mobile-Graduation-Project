@@ -25,22 +25,22 @@ const EditProfile = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#595959',
+        backgroundColor: '#636e72',
         justifyContent: 'center',
     },
     input: {
-        backgroundColor: 'black',
+        backgroundColor: '#2d3436',
         marginVertical: 10,
         padding: 10,
         borderWidth: 1.5,
-        borderColor: 'rgb(190, 36, 66)',
+        borderColor: '#d63031',
         borderRadius: 10,
         marginHorizontal: 10,
         color: 'white',
     },
     button: {
         marginHorizontal: 90,
-        backgroundColor: 'rgb(200, 46, 66)',
+        backgroundColor: '#d63031',
         padding: 8,
         borderRadius: 10,
         marginTop: 10,
