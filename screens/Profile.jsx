@@ -1,11 +1,39 @@
 import React from "react"
 import { Text, ScrollView, StyleSheet, Image, View, TouchableOpacity } from "react-native"
 import ProfileImage from "../components/Profile/profile-image/ProfileImage"
-import { clearAsyncStorage } from "../global functions and info/global"
+import { clearAsyncStorage, ipAdd, springPort } from "../global functions and info/global"
 import { useNavigation } from "@react-navigation/native"
 import ConfirmWindow from "../components/Profile/confirm-window/ConfirmWindow"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import axios from "axios"
 
 const Profile = () => {
+
+    const [accountType, setAccountType] = React.useState('');
+    const [accountObj, setAccountObj] = React.useState(null);
+    const [accountId, setAccountId] = React.useState(null);
+
+    React.useEffect(() => {
+        AsyncStorage.getItem('account').then(value => {
+            if (value === 'GARAGE') {
+                AsyncStorage.getItem('id').then(value => {
+                    axios.get(`http://${ipAdd}:${springPort}/garages/${parseInt(value)}`).then(response => {
+                        setAccountType('GARAGE');
+                        setAccountObj(response.data);
+                        setAccountId(response.data.garageID);
+                    })
+                })
+            } else if (value === 'USER') {
+                AsyncStorage.getItem('id').then(value => {
+                    axios.get(`http://${ipAdd}:${springPort}/users/${parseInt(value)}`).then(response => {
+                        setAccountType('USER');
+                        setAccountObj(response.data);
+                        setAccountId(response.data.id);
+                    })
+                })
+            }
+        })
+    }, []);
 
     const navigation = useNavigation()
 
@@ -17,10 +45,30 @@ const Profile = () => {
                 source={require('../assets/images/slider-img-3.jpg')}
                 style={styles.img}
             />
-            <ProfileImage />
+            <ProfileImage
+                accountObj={accountObj}
+                accountType={accountType}
+                accountId={accountId}
+            />
             <View style={styles.info}>
-                <Text style={styles.infoItem}>Name</Text>
-                <Text style={styles.infoItem}>Email</Text>
+                <Text style={styles.infoItem}>
+                    {
+                        accountObj ?
+                            (accountType === 'GARAGE' ?
+                                accountObj.garageName :
+                                accountObj.username) : null
+                    }
+                </Text>
+                <Text style={styles.infoItem}>
+                    {
+                        accountObj != null ?
+                            (
+                                accountType === 'GARAGE' ?
+                                    accountObj.garageEmail :
+                                    accountObj.email
+                            ) : null
+                    }
+                </Text>
             </View>
             <View style={styles.bar}>
                 <TouchableOpacity onPress={() => navigation.navigate('Edit your profile')}>
@@ -70,11 +118,12 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         transform: [{
             translateY: -80
-        }]
+        }],
     },
     infoItem: {
         color: '#fdcb6e',
         fontSize: 18,
+        textAlign: 'center',
     },
     bar: {
         display: 'flex',

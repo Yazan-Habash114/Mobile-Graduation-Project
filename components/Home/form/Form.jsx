@@ -7,11 +7,17 @@ import {
 import SignIn from "../signin/SignIn";
 import SignUp from "../signup/SignUp";
 import React from 'react';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const Form = () => {
 
     const [slide, setSlide] = React.useState(0)
+
+    AsyncStorage.setItem('loggedIn', 'true')
+    AsyncStorage.setItem('id', '5')
+    AsyncStorage.setItem('account', 'GARAGE')
+    // AsyncStorage.setItem('account', 'USER')
 
     return (
         <View style={styles.container}>

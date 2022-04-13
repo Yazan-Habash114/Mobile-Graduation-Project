@@ -1,15 +1,65 @@
 import React from "react"
-import { Text, StyleSheet, View, ImageBackground } from "react-native"
+import { StyleSheet, ImageBackground, TouchableOpacity } from "react-native"
+import { ipAdd, springPort } from "../../../global functions and info/global"
+import * as ImagePicker from 'expo-image-picker';
+import axios from "axios";
 
-const ProfileImage = () => {
+
+const ProfileImage = ({ accountObj, accountType, accountId }) => {
+
+    const [counter, setCounter] = React.useState(-1)
+    // const [image, setImage] = React.useState(null)
+
+    const choosePhoto = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        console.log(result);
+
+        // Upload to DB
+        const formData = new FormData();
+        formData.append('images', {
+            name: `photo.${fileType}`,
+            type: `image/${fileType}`,
+            uri: result.uri,
+        })
+
+        formData.append('file', myImg);
+        const config = {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+
+        axios.post(
+            `http://${ipAdd}:${springPort}/${accountType === 'GARAGE' ? 'garages' : 'users'}/${accountId}/profile/uploadProfileImage`,
+            formData,
+            config
+        ).then(response => {
+            console.log(response.data)
+            setCounter(counter + 1)
+        })
+
+        if (!result.cancelled) {
+            // setImage(result.uri);
+            return;
+        }
+    }
+
     return (
-        <View style={styles.container}>
+        <TouchableOpacity style={styles.container} onPress={choosePhoto}>
             <ImageBackground
-                source={require('../../../assets/images/iDrive.jpg')}
+                source={{
+                    uri: `http://${ipAdd}:${springPort}/${accountType === 'GARAGE' ? 'garages' : 'users'}/${accountId}/profileImage/${counter}`
+                }}
                 style={styles.img}
                 imageStyle={{ borderRadius: 100 }}
-            ></ImageBackground>
-        </View>
+            />
+        </TouchableOpacity>
     )
 }
 

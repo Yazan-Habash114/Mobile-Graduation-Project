@@ -85,12 +85,10 @@ const styles = StyleSheet.create({
     key: {
         flex: 1,
         display: 'flex',
-        alignItems: 'center',
     },
     value: {
         flex: 1,
         display: 'flex',
-        alignItems: 'center',
     },
     rowKey: {
         color: '#ecf0f1',
