@@ -2,13 +2,11 @@ import React from "react"
 import { StyleSheet, ImageBackground, TouchableOpacity } from "react-native"
 import { ipAdd, springPort } from "../../../global functions and info/global"
 import * as ImagePicker from 'expo-image-picker';
-import axios from "axios";
 
 
 const ProfileImage = ({ accountObj, accountType, accountId }) => {
 
     const [counter, setCounter] = React.useState(-1)
-    // const [image, setImage] = React.useState(null)
 
     const choosePhoto = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -18,35 +16,40 @@ const ProfileImage = ({ accountObj, accountType, accountId }) => {
             quality: 1,
         });
 
-        console.log(result);
-
-        // Upload to DB
-        const formData = new FormData();
-        formData.append('images', {
-            name: `photo.${fileType}`,
-            type: `image/${fileType}`,
-            uri: result.uri,
-        })
-
-        formData.append('file', myImg);
-        const config = {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        }
-
-        axios.post(
-            `http://${ipAdd}:${springPort}/${accountType === 'GARAGE' ? 'garages' : 'users'}/${accountId}/profile/uploadProfileImage`,
-            formData,
-            config
-        ).then(response => {
-            console.log(response.data)
-            setCounter(counter + 1)
-        })
-
         if (!result.cancelled) {
-            // setImage(result.uri);
-            return;
+            // Upload to DB
+            // ImagePicker saves the taken photo to disk and returns a local URI to it
+            let localUri = result.uri;
+            let filename = localUri.split('/').pop();
+
+            // Infer the type of the image
+            let match = /\.(\w+)$/.exec(filename);
+            let type = match ? `image/${match[1]}` : `image`;
+
+
+            const formData = new FormData();
+            formData.append('file', {
+                uri: result.uri,
+                type: type,
+                name: filename
+            })
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', `http://${ipAdd}:${springPort}/${accountType === 'GARAGE' ? 'garages' : 'users'}/${accountId}/profile/uploadProfileImage/`);
+
+            // console.log('OPENED', xhr.status);
+
+            // xhr.onprogress = function () {
+            //     console.log('LOADING', xhr.status);
+            // };
+
+            xhr.onload = function () {
+                // console.log('DONE', xhr.status);
+                setCounter(counter + 1);
+            };
+
+            xhr.setRequestHeader('Content-Type', 'multipart/form-data')
+            xhr.send(formData)
         }
     }
 
@@ -54,12 +57,12 @@ const ProfileImage = ({ accountObj, accountType, accountId }) => {
         <TouchableOpacity style={styles.container} onPress={choosePhoto}>
             <ImageBackground
                 source={{
-                    uri: `http://${ipAdd}:${springPort}/${accountType === 'GARAGE' ? 'garages' : 'users'}/${accountId}/profileImage/${counter}`
+                    uri: `http://${ipAdd}:${springPort}/${accountType === 'GARAGE' ? 'garages' : 'users'}/${accountId}/profileImage/-1`
                 }}
                 style={styles.img}
                 imageStyle={{ borderRadius: 100 }}
             />
-        </TouchableOpacity>
+        </TouchableOpacity >
     )
 }
 
