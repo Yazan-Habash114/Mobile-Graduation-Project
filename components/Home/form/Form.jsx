@@ -14,6 +14,11 @@ const Form = () => {
 
     const [slide, setSlide] = React.useState(0)
 
+    const max = 999999999
+    const min = -999999999
+
+    AsyncStorage.setItem('counter', '' + Math.floor(Math.random() * (max - min) + min))
+
     AsyncStorage.setItem('loggedIn', 'true')
     AsyncStorage.setItem('id', '5')
     AsyncStorage.setItem('account', 'GARAGE')

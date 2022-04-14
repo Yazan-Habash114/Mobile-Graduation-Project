@@ -8,6 +8,16 @@ const Service = ({ item }) => {
 
     const navigation = useNavigation()
 
+    // Image local counter
+    const [localCounter, setLocalCounter] = React.useState(-1000)
+
+    React.useEffect(() => {
+        AsyncStorage.getItem('counter').then(value => {
+            let temp = parseInt(value)
+            setLocalCounter(temp)
+        })
+    }, [])
+
     // Authentication
     const [auth, setAuth] = React.useState(false)
 
@@ -42,7 +52,7 @@ const Service = ({ item }) => {
         >
             <Image
                 style={styles.img}
-                source={{ uri: `http://${ipAdd}:${springPort}/garages/${item.garageID}/profileImage/-1` }}
+                source={{ uri: `http://${ipAdd}:${springPort}/garages/${item.garageID}/profileImage/${localCounter}` }}
             />
             <View>
                 <Text style={styles.name}>{item.garageName}</Text>

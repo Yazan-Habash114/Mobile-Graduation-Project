@@ -3,18 +3,29 @@ import { Text, View, StyleSheet, Image, TouchableOpacity, ScrollView } from "rea
 import { ipAdd, port, springPort } from '../global functions and info/global'
 import { WebView } from 'react-native-webview'
 import { useNavigation } from '@react-navigation/native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const GaragePage = ({ route }) => {
     const { garage } = route.params
 
     const navigation = useNavigation()
 
+    // Image local counter
+    const [localCounter, setLocalCounter] = React.useState(-1000)
+
+    React.useEffect(() => {
+        AsyncStorage.getItem('counter').then(value => {
+            let temp = parseInt(value)
+            setLocalCounter(temp)
+        })
+    }, [])
+
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={{ flex: 1 }}>
                 <Image
                     style={styles.img}
-                    source={{ uri: `http://${ipAdd}:${springPort}/garages/${garage.garageID}/profileImage/-1` }}
+                    source={{ uri: `http://${ipAdd}:${springPort}/garages/${garage.garageID}/profileImage/${localCounter}` }}
                 />
                 <Text style={styles.garageName}>{garage.garageName}</Text>
 

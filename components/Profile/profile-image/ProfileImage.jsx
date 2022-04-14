@@ -2,11 +2,22 @@ import React from "react"
 import { StyleSheet, ImageBackground, TouchableOpacity } from "react-native"
 import { ipAdd, springPort } from "../../../global functions and info/global"
 import * as ImagePicker from 'expo-image-picker';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const ProfileImage = ({ accountObj, accountType, accountId }) => {
 
-    const [counter, setCounter] = React.useState(-1)
+    // Image local counter
+    const [localCounter, setLocalCounter] = React.useState(-1000)
+
+    React.useEffect(() => {
+        console.log('before async = ' + localCounter)
+        AsyncStorage.getItem('counter').then(value => {
+            let temp = parseInt(value)
+            setLocalCounter(temp)
+            console.log('temp = ' + temp)
+        });
+    }, [localCounter])
 
     const choosePhoto = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -45,7 +56,9 @@ const ProfileImage = ({ accountObj, accountType, accountId }) => {
 
             xhr.onload = function () {
                 // console.log('DONE', xhr.status);
-                setCounter(counter + 1);
+                console.log(localCounter)
+                setLocalCounter(localCounter + 1)
+                AsyncStorage.setItem('counter', '' + (localCounter + 1))
             };
 
             xhr.setRequestHeader('Content-Type', 'multipart/form-data')
@@ -57,7 +70,7 @@ const ProfileImage = ({ accountObj, accountType, accountId }) => {
         <TouchableOpacity style={styles.container} onPress={choosePhoto}>
             <ImageBackground
                 source={{
-                    uri: `http://${ipAdd}:${springPort}/${accountType === 'GARAGE' ? 'garages' : 'users'}/${accountId}/profileImage/-1`
+                    uri: `http://${ipAdd}:${springPort}/${accountType === 'GARAGE' ? 'garages' : 'users'}/${accountId}/profileImage/${localCounter}`
                 }}
                 style={styles.img}
                 imageStyle={{ borderRadius: 100 }}
