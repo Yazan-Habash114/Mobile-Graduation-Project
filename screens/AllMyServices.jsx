@@ -4,8 +4,15 @@ import Service from '../components/Service/Service'
 import DatePicker from 'react-native-neat-date-picker'
 import axios from 'axios'
 import { ipAdd, springPort } from '../global functions and info/global'
+import { useNavigation } from '@react-navigation/native'
+import { Ionicons } from '@expo/vector-icons'
+import SlotTime from '../components/SlotTime/SlotTime'
 
-const AllServices = () => {
+const AllMyServices = ({ route }) => {
+
+    const garage = route.params
+
+    const navigation = useNavigation()
 
     const [showDatePicker, setShowDatePicker] = React.useState(false)
     const [date, setDate] = React.useState(new Date().format('yyyy-MM-dd'))
@@ -66,20 +73,23 @@ const AllServices = () => {
     // Flat List
     const renderList = ({ item }) => {
         return (
-            <Service item={item} />
+            <View style={styles.row}>
+                <Service item={item} />
+                <SlotTime item={item} />
+            </View>
         );
     };
 
     React.useEffect(() => {
-        axios.get(`http://${ipAdd}:${springPort}/services/Maintenance/getAllServicesByDates/${date}`)
+        axios.get(`http://${ipAdd}:${springPort}/garages/${garage.garageID}/getGarageServicesByType/Maintenance`)
             .then(response => {
                 setMaintenance(response.data)
             })
-        axios.get(`http://${ipAdd}:${springPort}/services/Electrical/getAllServicesByDates/${date}`)
+        axios.get(`http://${ipAdd}:${springPort}/garages/${garage.garageID}/getGarageServicesByType/Electrical`)
             .then(response => {
                 setElectrical(response.data)
             })
-        axios.get(`http://${ipAdd}:${springPort}/services/Car%20Washing/getAllServicesByDates/${date}`)
+        axios.get(`http://${ipAdd}:${springPort}/garages/${garage.garageID}/getGarageServicesByType/Car%20Washing`)
             .then(response => {
                 setCarWashing(response.data)
             })
@@ -89,8 +99,15 @@ const AllServices = () => {
         <View style={styles.container}>
             <SafeAreaView style={{ width: '100%', paddingBottom: 90, }}>
                 <TouchableOpacity
-                    onPress={() => setShowDatePicker(true)}
-                >
+                    style={styles.addService}
+                    onPress={() => navigation.navigate('Add New Service', {
+                        garage: garage
+                    })}>
+                    <Text style={styles.addServiceText}>Add New Service</Text>
+                    <Ionicons name="add" size={24} color="white" />
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => setShowDatePicker(true)}>
                     <Text style={styles.chooseDate}>Choose Date</Text>
                 </TouchableOpacity>
 
@@ -127,7 +144,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'stretch',
-        backgroundColor: '#636e72'
+        backgroundColor: '#636e72',
+        paddingBottom: 60,
     },
     serviceType: {
         marginHorizontal: 10,
@@ -161,7 +179,27 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 18,
         fontStyle: 'italic',
-    }
+    },
+    addService: {
+        backgroundColor: '#00b894',
+        padding: 10,
+        marginHorizontal: 10,
+        borderRadius: 10,
+        marginTop: 10,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    addServiceText: {
+        color: '#dfe6e9',
+        fontSize: 17,
+        fontWeight: 'bold',
+    },
+    row: {
+        display: 'flex',
+        flexDirection: 'row',
+        marginVertical: 10,
+    },
 })
 
-export default AllServices
+export default AllMyServices

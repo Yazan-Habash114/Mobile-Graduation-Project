@@ -74,12 +74,31 @@ const Profile = () => {
                 <TouchableOpacity onPress={() => navigation.navigate('Edit your profile')}>
                     <Text style={styles.barElements}>Edit profile</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('Your cart')}>
-                    <Text style={styles.barElements}>Your Cart</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('Your ordered services')}>
-                    <Text style={styles.barElements}>Ordered Services</Text>
-                </TouchableOpacity>
+
+                {
+                    accountType === "GARAGE" ? (
+                        <TouchableOpacity onPress={() =>
+                            navigation.navigate('All My Services', accountObj)}>
+                            <Text style={styles.barElements}>All My Services</Text>
+                        </TouchableOpacity>
+                    ) : (
+                        <TouchableOpacity onPress={() => navigation.navigate('Your cart')}>
+                            <Text style={styles.barElements}>Your Cart</Text>
+                        </TouchableOpacity>
+                    )
+                }
+
+                {
+                    accountType === "GARAGE" ? (
+                        <TouchableOpacity onPress={() => navigation.navigate('All My Customers', accountId)}>
+                            <Text style={styles.barElements}>My Customers</Text>
+                        </TouchableOpacity>
+                    ) : (
+                        <TouchableOpacity onPress={() => navigation.navigate('Your ordered services')}>
+                            <Text style={styles.barElements}>Ordered Services</Text>
+                        </TouchableOpacity>
+                    )
+                }
             </View>
             <View style={styles.bar}>
                 <TouchableOpacity onPress={() => setShowWindow(true)}>

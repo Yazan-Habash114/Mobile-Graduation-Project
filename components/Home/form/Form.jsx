@@ -44,7 +44,7 @@ const Form = () => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "#3f3f3f",
+        backgroundColor: "#636e72",
         height: "100%",
         width: "100%",
         display: "flex",
@@ -55,17 +55,17 @@ const styles = StyleSheet.create({
     formSlide: {
         borderStyle: 'solid',
         borderWidth: 2,
-        borderColor: 'rgb(198, 14, 48)',
-        borderBottomEndRadius: 15,
+        borderColor: '#d63031',
+        borderBottomLeftRadius: 15,
         borderTopRightRadius: 15,
         display: 'flex',
         alignItems: 'center',
         width: '90%',
         paddingVertical: 15,
-        backgroundColor: '#343434'
+        backgroundColor: '#2d3436'
     },
     header: {
-        color: 'white',
+        color: '#dfe6e9',
         fontSize: 25,
     },
     logo: {

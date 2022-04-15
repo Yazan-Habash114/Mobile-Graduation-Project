@@ -1,13 +1,9 @@
 import React from 'react'
 import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native"
-import { useNavigation } from '@react-navigation/native'
 import { ipAdd, springPort } from '../../global functions and info/global'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const Garage = ({ item }) => {
-
-    const navigation = useNavigation()
-
+const Customer = ({ item }) => {
     // Image local counter
     const [localCounter, setLocalCounter] = React.useState(-1000)
 
@@ -42,14 +38,7 @@ const Garage = ({ item }) => {
     }, [])
 
     return (
-        <TouchableOpacity
-            onPress={() => {
-                auth ? navigation.navigate('Garage Page', {
-                    garage: item
-                }) : null
-            }}
-            style={styles.container}
-        >
+        <TouchableOpacity style={styles.container}>
             <Image
                 style={styles.img}
                 source={{ uri: `http://${ipAdd}:${springPort}/garages/${item.garageID}/profileImage/${localCounter}` }}
@@ -109,4 +98,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Garage
+export default Customer

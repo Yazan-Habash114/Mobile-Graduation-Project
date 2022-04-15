@@ -60,7 +60,7 @@ const SignUp = ({ setSlide }) => {
                 // navigation.navigate('Tabs')
             }}
                 title="Create Account"
-                color="rgb(190, 18, 48)"
+                color="#d63031"
             >
             </Button>
         </View>
@@ -99,17 +99,17 @@ const styles = StyleSheet.create({
     dropList: {
         width: '45%',
         color: 'white',
-        backgroundColor: 'rgb(190, 18, 48)',
+        backgroundColor: '#d63031',
         marginTop: 5,
     },
     typeSpan: {
-        color: 'white',
+        color: '#dfe6e9',
         fontSize: 20,
         marginRight: 10,
     },
     haveAccount: {
         marginBottom: 10,
-        color: "rgb(190, 18, 47)",
+        color: "#d63031",
         fontSize: 18
     },
 })

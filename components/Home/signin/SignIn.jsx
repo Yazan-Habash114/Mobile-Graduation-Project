@@ -32,7 +32,7 @@ const SignIn = ({ setSlide }) => {
             </TouchableOpacity>
             <Button
                 title="Login"
-                color="rgb(190, 18, 48)"
+                color="#d63031"
                 onPress={() => {
                     // navigation.navigate('Tabs')
                     navigation.reset({
@@ -68,11 +68,11 @@ const styles = StyleSheet.create({
     },
     haveAccount: {
         marginBottom: 10,
-        color: "rgb(190, 18, 47)",
+        color: "#d63031",
         fontSize: 16,
     },
     forget: {
-        color: 'white',
+        color: '#dfe6e9',
         marginBottom: 20,
     },
 })
