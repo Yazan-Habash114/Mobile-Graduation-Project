@@ -11,6 +11,7 @@ import SlotTime from '../components/SlotTime/SlotTime';
 import AddService from '../screens/AddService';
 import EditSlotTimes from '../screens/EditSlotTimes';
 import EditSlot from '../screens/EditSlot';
+import AddSlot from '../screens/AddSlot';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +29,7 @@ const ProfileStack = () => {
                 <Stack.Screen name="Scheduling The Service" component={EditSlotTimes} />
                 <Stack.Screen name="Add New Service" component={AddService} />
                 <Stack.Screen name="Edit Slot Time" component={EditSlot} />
+                <Stack.Screen name="Add Slot Time" component={AddSlot} />
             </Stack.Navigator>
         </View>
     );

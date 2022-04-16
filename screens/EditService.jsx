@@ -5,9 +5,23 @@ import axios from 'axios'
 import { ipAdd, springPort } from '../global functions and info/global'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 import { Feather } from '@expo/vector-icons'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const EditService = ({ route }) => {
     const { service } = route.params
+
+    const [id, setId] = React.useState(0)
+
+    // Image local counter
+    const [localCounter, setLocalCounter] = React.useState(-1000)
+
+    React.useEffect(() => {
+        AsyncStorage.getItem('counter').then(value => {
+            let temp = parseInt(value)
+            setLocalCounter(temp)
+        })
+        AsyncStorage.getItem('id').then(value => setId(parseInt(value)))
+    }, [])
 
     // Date Time picker state
     const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
@@ -78,7 +92,7 @@ const EditService = ({ route }) => {
             <ScrollView contentContainerStyle={{ width: '100%' }}>
                 <Image
                     style={styles.img}
-                    source={{ uri: `http://${ipAdd}:${springPort}/garages/${service.supportedGarageID}/profileImage/-1` }}
+                    source={{ uri: `http://${ipAdd}:${springPort}/garages/${id}/profileImage/${localCounter}` }}
                 />
 
                 <Text style={styles.serviceName}>{service.serviceName}</Text>

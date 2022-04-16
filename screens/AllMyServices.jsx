@@ -81,19 +81,22 @@ const AllMyServices = ({ route }) => {
     };
 
     React.useEffect(() => {
-        axios.get(`http://${ipAdd}:${springPort}/garages/${garage.garageID}/getGarageServicesByType/Maintenance`)
-            .then(response => {
-                setMaintenance(response.data)
-            })
-        axios.get(`http://${ipAdd}:${springPort}/garages/${garage.garageID}/getGarageServicesByType/Electrical`)
-            .then(response => {
-                setElectrical(response.data)
-            })
-        axios.get(`http://${ipAdd}:${springPort}/garages/${garage.garageID}/getGarageServicesByType/Car%20Washing`)
-            .then(response => {
-                setCarWashing(response.data)
-            })
-    }, [date])
+        const unsubscribe = navigation.addListener('focus', () => {
+            axios.get(`http://${ipAdd}:${springPort}/garages/${garage.garageID}/getGarageServicesByType/Maintenance`)
+                .then(response => {
+                    setMaintenance(response.data)
+                })
+            axios.get(`http://${ipAdd}:${springPort}/garages/${garage.garageID}/getGarageServicesByType/Electrical`)
+                .then(response => {
+                    setElectrical(response.data)
+                })
+            axios.get(`http://${ipAdd}:${springPort}/garages/${garage.garageID}/getGarageServicesByType/Car%20Washing`)
+                .then(response => {
+                    setCarWashing(response.data)
+                })
+        })
+        return unsubscribe
+    }, [date, navigation])
 
     return (
         <View style={styles.container}>

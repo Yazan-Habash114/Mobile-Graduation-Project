@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import { ipAdd, springPort } from '../global functions and info/global'
+import { Ionicons } from '@expo/vector-icons'
 
 const EditSlotTimes = ({ route }) => {
     const { service } = route.params
@@ -12,7 +13,16 @@ const EditSlotTimes = ({ route }) => {
     const navigation = useNavigation()
 
     const [id, setId] = useState(0)
-    const [slots, setSlots] = useState(service.slotTimes)
+    const [slots, setSlots] = useState(null)
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            axios.get(`http://${ipAdd}:${springPort}/services/${service.serviceID}/gatAllSlotTimesForService`).then(response => {
+                setSlots(response.data)
+            })
+        })
+        return unsubscribe
+    }, [navigation])
 
     useEffect(() => AsyncStorage.getItem('id').then(value => setId(parseInt(value))), [])
 
@@ -58,6 +68,14 @@ const EditSlotTimes = ({ route }) => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>{service.serviceName}</Text>
+            <TouchableOpacity
+                style={styles.addSlot}
+                onPress={() => navigation.navigate('Add Slot Time', {
+                    service: service
+                })}>
+                <Text style={styles.addSlotText}>Add New Slot Time</Text>
+                <Ionicons name="add" size={24} color="white" />
+            </TouchableOpacity>
             <FlatList
                 nestedScrollEnabled={true}
                 data={slots}
@@ -107,6 +125,21 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#d63031',
+    },
+    addSlot: {
+        backgroundColor: '#00b894',
+        padding: 10,
+        marginHorizontal: 10,
+        borderRadius: 10,
+        marginTop: 10,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    addSlotText: {
+        color: '#dfe6e9',
+        fontSize: 17,
+        fontWeight: 'bold',
     },
 })
 

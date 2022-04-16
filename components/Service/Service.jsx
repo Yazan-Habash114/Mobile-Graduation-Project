@@ -11,11 +11,7 @@ const Service = ({ item }) => {
         <TouchableOpacity
             onPress={() => {
                 AsyncStorage.getItem('account').then(value => {
-                    if (value === 'GARAGE') {
-                        navigation.navigate('Edit Service', {
-                            service: item
-                        })
-                    } else {
+                    if (value === 'USER') {
                         navigation.navigate('Service Details', {
                             service: item
                         })
