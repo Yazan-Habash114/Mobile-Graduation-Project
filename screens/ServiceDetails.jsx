@@ -6,6 +6,7 @@ import * as Location from 'expo-location'
 import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import Slider from '@react-native-community/slider';
 
 const ServiceDetails = ({ route }) => {
     const { service } = route.params
@@ -25,6 +26,8 @@ const ServiceDetails = ({ route }) => {
     const [errorMsg, setErrorMsg] = React.useState(null);
     const [myAccountId, setMyAccountId] = React.useState(null);
 
+    const [rating, setRating] = React.useState(0)
+
     React.useEffect(() => {
         axios.get(`http://${ipAdd}:${springPort}/garages/${service.supportedGarageID}`).then(response => setGarage(response.data)).catch(error => alert('error'))
         setServiceID(service.serviceID);
@@ -38,6 +41,20 @@ const ServiceDetails = ({ route }) => {
 
     const changeSlotState = (slot) => {
         setChoosedSlot(slot)
+    }
+
+    const sliderHandler = (value) => {
+        // axios.post(
+        //     `http://${ipAdd}:${springPort}/services/rateService/${service.serviceID}`,
+        //     { rating },
+        //     {
+        //         headers: {
+        //             "Content-type": "application/json; charset=UTF-8",
+        //             "Accept": "application/json"
+        //         }
+        //     }
+        // )
+        setRating(value)
     }
 
     const components = [{ title: "image" }, { title: "content" }]
@@ -161,6 +178,20 @@ const ServiceDetails = ({ route }) => {
                             </TouchableOpacity>
                         ) : null
                     }
+
+                    <View style={styles.slider}>
+                        <Slider
+                            style={{ width: 200, height: 40 }}
+                            value={0}
+                            minimumValue={0}
+                            maximumValue={5}
+                            minimumTrackTintColor="#FFFFFF"
+                            maximumTrackTintColor="#000000"
+                            step={0.5}
+                            onSlidingComplete={value => sliderHandler(value)}
+                        />
+                        <Text style={styles.ratingText}>Rating: {rating}</Text>
+                    </View>
 
                     {/* {location != null ? <WebView
                         nestedScrollEnabled
@@ -373,6 +404,14 @@ const styles = StyleSheet.create({
         color: 'white',
         borderRadius: 10,
         textAlign: 'center',
+    },
+    slider: {
+        display: 'flex',
+        alignItems: 'center',
+    },
+    ratingText: {
+        color: 'white',
+        fontSize: 18,
     },
 })
 

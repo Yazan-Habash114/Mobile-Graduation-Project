@@ -11,6 +11,7 @@ import EditSlot from '../screens/EditSlot';
 import AddSlot from '../screens/AddSlot';
 import BookedServices from '../screens/BookedServices';
 import GaragePage from '../screens/GaragePage'
+import ServiceDetails from '../screens/ServiceDetails';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +30,7 @@ const ProfileStack = () => {
                 <Stack.Screen name="Add Slot Time" component={AddSlot} />
                 <Stack.Screen name="Your Booked Services" component={BookedServices} />
                 <Stack.Screen name="Garage Page" component={GaragePage} />
+                <Stack.Screen name="Your booked service details" component={ServiceDetails} />
             </Stack.Navigator>
         </View>
     );

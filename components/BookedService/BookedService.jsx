@@ -6,7 +6,6 @@ import { ipAdd, springPort } from '../../global functions and info/global'
 
 
 const BookedService = ({ item, accountId }) => {
-    const [showHidden, setShowHidden] = useState(false)
     const [supportedGarage, setSupportedGarage] = useState(null)
     const [slotReserved, setSlotReserved] = useState(null)
 
@@ -29,7 +28,11 @@ const BookedService = ({ item, accountId }) => {
         <View style={styles.container}>
             <ScrollView>
                 <View>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() =>
+                        navigation.navigate('Your booked service details', {
+                            service: item
+                        })}
+                    >
                         <Text style={styles.name}>
                             {item.serviceName}
                         </Text>
@@ -50,18 +53,27 @@ const BookedService = ({ item, accountId }) => {
                     <Text style={styles.info}>
                         Service Price: {item.price}
                     </Text>
-                    <Text style={styles.info}>
-                        Service Long Time: {item.serviceTime}
-                    </Text>
-                    <Text style={styles.info}>
-                        Date Booked: {slotReserved.date}
-                    </Text>
-                    <Text style={styles.info}>
-                        Start time: {slotReserved.startTime}
-                    </Text>
-                    <Text style={styles.info}>
-                        End time: {slotReserved.endTime}
-                    </Text>
+                    {
+                        slotReserved ? (
+                            <Text style={styles.info}>
+                                Date Booked: {slotReserved.date}
+                            </Text>
+                        ) : null
+                    }
+                    {
+                        slotReserved ? (
+                            <Text style={styles.info}>
+                                Start time: {slotReserved.startTime}
+                            </Text>
+                        ) : null
+                    }
+                    {
+                        slotReserved ? (
+                            <Text style={styles.info}>
+                                End time: {slotReserved.endTime}
+                            </Text>
+                        ) : null
+                    }
                 </View>
             </ScrollView>
         </View>
