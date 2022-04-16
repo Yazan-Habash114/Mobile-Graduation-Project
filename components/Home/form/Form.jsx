@@ -21,8 +21,8 @@ const Form = () => {
 
     AsyncStorage.setItem('loggedIn', 'true')
     AsyncStorage.setItem('id', '5')
-    AsyncStorage.setItem('account', 'GARAGE')
-    // AsyncStorage.setItem('account', 'USER')
+    // AsyncStorage.setItem('account', 'GARAGE')
+    AsyncStorage.setItem('account', 'USER')
 
     return (
         <View style={styles.container}>

@@ -82,9 +82,7 @@ const Profile = () => {
                             <Text style={styles.barElements}>All My Services</Text>
                         </TouchableOpacity>
                     ) : (
-                        <TouchableOpacity onPress={() => navigation.navigate('Your cart')}>
-                            <Text style={styles.barElements}>Your Cart</Text>
-                        </TouchableOpacity>
+                        null
                     )
                 }
 
@@ -94,7 +92,7 @@ const Profile = () => {
                             <Text style={styles.barElements}>My Customers</Text>
                         </TouchableOpacity>
                     ) : (
-                        <TouchableOpacity onPress={() => navigation.navigate('Your ordered services')}>
+                        <TouchableOpacity onPress={() => navigation.navigate('Your Booked Services', accountId)}>
                             <Text style={styles.barElements}>Ordered Services</Text>
                         </TouchableOpacity>
                     )
