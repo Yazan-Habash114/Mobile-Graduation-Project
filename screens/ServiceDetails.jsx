@@ -44,16 +44,17 @@ const ServiceDetails = ({ route }) => {
     }
 
     const sliderHandler = (value) => {
-        // axios.post(
-        //     `http://${ipAdd}:${springPort}/services/rateService/${service.serviceID}`,
-        //     { rating },
-        //     {
-        //         headers: {
-        //             "Content-type": "application/json; charset=UTF-8",
-        //             "Accept": "application/json"
-        //         }
-        //     }
-        // )
+        let floatValue = value.toFixed(1)
+        axios.post(
+            `http://${ipAdd}:${springPort}/services/rateService/${service.serviceID}`,
+            floatValue,
+            {
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    "Accept": "application/json"
+                }
+            }
+        )
         setRating(value)
     }
 
@@ -76,7 +77,9 @@ const ServiceDetails = ({ route }) => {
                             {garage ?
                                 <Text style={styles.key}>Supporting Garage: </Text> : null
                             }
+                            <Text style={styles.key}>Name: </Text>
                             <Text style={styles.key}>Price: </Text>
+                            <Text style={styles.key}>Rating: </Text>
                         </View>
                         <View style={styles.values}>
                             {garage ?
@@ -86,7 +89,15 @@ const ServiceDetails = ({ route }) => {
                                     <Text style={styles.value}>{garage.garageName}</Text>
                                 </TouchableOpacity> : null
                             }
+                            <Text style={styles.value}>{service.serviceName}</Text>
                             <Text style={styles.value}>${service.price}</Text>
+                            {
+                                service.rateValue === 0.0 ? (
+                                    <Text style={styles.value}>Not rated yet</Text>
+                                ) : (
+                                    <Text style={styles.value}>{service.rateValue.toFixed(1)}/5.0</Text>
+                                )
+                            }
                         </View>
                     </View>
                     <Text style={styles.description}>{service.serviceDescription}</Text>
@@ -186,7 +197,8 @@ const ServiceDetails = ({ route }) => {
                             minimumValue={0}
                             maximumValue={5}
                             minimumTrackTintColor="#FFFFFF"
-                            maximumTrackTintColor="#000000"
+                            maximumTrackTintColor="#dfe6e9"
+                            thumbTintColor="#d63031"
                             step={0.5}
                             onSlidingComplete={value => sliderHandler(value)}
                         />
@@ -275,7 +287,7 @@ const ServiceDetails = ({ route }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#636e72'
+        backgroundColor: '#2d3436'
     },
     img: {
         width: '100%',
@@ -306,55 +318,52 @@ const styles = StyleSheet.create({
         flex: 1,
         display: 'flex',
         alignItems: 'stretch',
-        justifyContent: 'center',
     },
     values: {
         flex: 1,
         display: 'flex',
         alignItems: 'stretch',
-        justifyContent: 'center',
     },
     key: {
-        textAlign: 'center',
         fontWeight: 'bold',
         fontSize: 16,
-        marginLeft: 30,
-        color: '#00cec9',
+        marginLeft: 10,
+        color: '#d63031',
     },
     value: {
         fontSize: 16,
-        marginLeft: 30,
-        color: '#81ecec',
-        textAlign: 'center',
+        marginLeft: 10,
+        color: '#dfe6e9',
     },
     description: {
         textAlign: 'center',
         fontStyle: 'italic',
         fontSize: 18,
         marginHorizontal: 10,
-        color: '#55efc4',
+        color: '#dfe6e9',
     },
     headers: {
-        fontSize: 16,
+        fontSize: 17,
+        fontWeight: 'bold',
         marginTop: 15,
         marginHorizontal: 10,
-        color: '#00cec9',
+        color: '#d63031',
     },
     timeSlots: {
         padding: 10,
     },
     slot: {
         fontSize: 18,
-        backgroundColor: '#d63031',
+        backgroundColor: '#b2bec3',
         marginVertical: 10,
         padding: 10,
-        color: '#dfe6e9',
+        color: '#2d3436',
         borderRadius: 10,
         textAlign: 'center',
     },
     reservedSlot: {
         fontSize: 18,
-        backgroundColor: '#222',
+        backgroundColor: '#d63031',
         marginVertical: 10,
         padding: 10,
         color: '#dfe6e9',
@@ -383,7 +392,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         marginHorizontal: 10,
         fontWeight: 'bold',
-        color: '#55efc4',
+        color: '#d63031',
     },
     confirmBooking: {
         fontSize: 18,
@@ -397,7 +406,7 @@ const styles = StyleSheet.create({
     },
     confirmUnbooking: {
         fontSize: 18,
-        backgroundColor: '#333',
+        backgroundColor: '#636e72',
         marginVertical: 10,
         marginHorizontal: 10,
         padding: 10,

@@ -3,12 +3,15 @@ import { View, StyleSheet, FlatList, SafeAreaView, Text } from "react-native"
 import axios from 'axios'
 import { ipAdd, springPort } from '../global functions and info/global'
 import BookedService from '../components/BookedService/BookedService'
+import { useNavigation } from '@react-navigation/native'
 
 const BookedServices = ({ route }) => {
 
     const accountId = route.params
 
     const [bookedServices, setBookedServices] = React.useState([])
+
+    const navigation = useNavigation()
 
     // Flat List
     const renderBookedServices = ({ item }) => {
@@ -17,9 +20,12 @@ const BookedServices = ({ route }) => {
 
     React.useEffect(() => {
         // Update API
-        axios.get(`http://${ipAdd}:${springPort}/users/${accountId}/bookedServices`)
-            .then(response => setBookedServices(response.data))
-    }, []);
+        const unsubscribe = navigation.addListener('focus', () => {
+            axios.get(`http://${ipAdd}:${springPort}/users/${accountId}/bookedServices`)
+                .then(response => setBookedServices(response.data))
+        })
+        return unsubscribe
+    }, [navigation]);
 
     return (
         <View style={styles.container}>

@@ -47,6 +47,17 @@ const BookedService = ({ item, accountId }) => {
                             Supported Garage: {item.supportedGarageName}
                         </Text>
                     </TouchableOpacity>
+                    {
+                        item.rateValue === 0.0 ? (
+                            <Text style={styles.info}>
+                                Service rate: Not rated yet
+                            </Text>
+                        ) : (
+                            <Text style={styles.info}>
+                                Service rate: {item.rateValue.toFixed(1)}/5.0
+                            </Text>
+                        )
+                    }
                     <Text style={styles.info}>
                         Service Type: {item.serviceType}
                     </Text>
