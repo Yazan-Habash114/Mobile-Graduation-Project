@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Button } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { useNavigation } from '@react-navigation/native';
+import { ipAdd, springPort } from '../../../global functions and info/global';
 
 const SignUp = ({ setSlide }) => {
 
-    const [accountType, setAccountType] = React.useState('User Account')
-
-    const navigation = useNavigation()
+    const [accountType, setAccountType] = useState('User')
+    const [username, setUsername] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassowrd] = useState('')
+    const [phone, setPhone] = useState('')
 
     return (
         <View style={styles.container}>
@@ -17,22 +19,26 @@ const SignUp = ({ setSlide }) => {
                 style={styles.input}
                 placeholder="Username"
                 placeholderTextColor="#a8a8a8"
+                onChangeText={(value) => setUsername(value)}
             />
             <TextInput
                 style={styles.input}
                 placeholder="Email"
                 placeholderTextColor="#a8a8a8"
+                onChangeText={(value) => setEmail(value)}
             />
             <TextInput
                 style={styles.input}
                 placeholder="Password"
                 placeholderTextColor="#a8a8a8"
                 secureTextEntry={true}
+                onChangeText={(value) => setPassowrd(value)}
             />
             <TextInput
                 style={styles.input}
                 placeholder="Phone"
                 placeholderTextColor="#a8a8a8"
+                onChangeText={(value) => setPhone(value)}
             />
             <View style={styles.accountType}>
                 <Text style={styles.typeSpan}>Account Type:</Text>
@@ -49,20 +55,37 @@ const SignUp = ({ setSlide }) => {
                 <Text style={styles.haveAccount}>Have an account ?</Text>
             </TouchableOpacity>
             <Button onPress={() => {
-                // axios.get('http://10.0.0.8:8080/users/5').then(response => {
-                //     alert(response.data.email)
-                //     // alert(AsyncStorage.getItem('type'))
-                // })
-                navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'Tabs' }]
+                axios.post(
+                    `http://${ipAdd}:${springPort}/${accountType === "User" ? 'users' : 'garages'}/signup`,
+                    JSON.stringify([username, email, phone, password]),
+                    {
+                        headers: {
+                            "Content-type": "application/json; charset=UTF-8",
+                            "Accept": "application/json"
+                        }
+                    }
+                ).then(response => {
+                    const max = 999999999
+                    const min = -999999999
+
+                    AsyncStorage.setItem('counter', '' + Math.floor(Math.random() * (max - min) + min))
+
+                    AsyncStorage.setItem('loggedIn', 'true')
+                    AsyncStorage.setItem('id', '' + response.data)
+                    accountType === 'User' ? (
+                        AsyncStorage.setItem('account', 'USER')
+                    ) : (
+                        AsyncStorage.setItem('account', 'GARAGE')
+                    )
+                    alert('New account created successfully')
+                    if (accountType === 'Garage') {
+                        setSlide(3)
+                    }
                 })
-                // navigation.navigate('Tabs')
             }}
                 title="Create Account"
                 color="#d63031"
-            >
-            </Button>
+            />
         </View>
     )
 }

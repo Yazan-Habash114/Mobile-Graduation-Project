@@ -6,40 +6,44 @@ import {
 } from "react-native";
 import SignIn from "../signin/SignIn";
 import SignUp from "../signup/SignUp";
+import LocationPanel from "../LocationPanel/LocationPanel";
 import React from 'react';
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const Form = () => {
 
     const [slide, setSlide] = React.useState(0)
 
-    const max = 999999999
-    const min = -999999999
+    if (slide === 3) {
+        return (
+            <View style={styles.container}>
+                <Image source={require('../../../assets/images/iDrive.jpg')} style={styles.logo} />
+                <View style={styles.formSlide}>
+                    <Text style={styles.header}>Choose Location and time</Text>
+                    <LocationPanel setSlide={setSlide} />
+                </View>
+            </View>
+        );
+    }
 
-    AsyncStorage.setItem('counter', '' + Math.floor(Math.random() * (max - min) + min))
-
-    AsyncStorage.setItem('loggedIn', 'true')
-    AsyncStorage.setItem('id', '5')
-    // AsyncStorage.setItem('account', 'GARAGE')
-    AsyncStorage.setItem('account', 'USER')
-
-    return (
-        <View style={styles.container}>
-            <Image source={require('../../../assets/images/iDrive.jpg')} style={styles.logo} />
-            {
-                slide == 0 ?
-                    <View style={styles.formSlide}>
-                        <Text style={styles.header}>Sign Up</Text>
-                        <SignUp setSlide={setSlide} />
-                    </View> :
-                    <View style={styles.formSlide}>
-                        <Text style={styles.header}>Sign In</Text>
-                        <SignIn setSlide={setSlide} />
-                    </View>
-            }
-        </View>
-    );
+    else {
+        return (
+            <View style={styles.container}>
+                <Image source={require('../../../assets/images/iDrive.jpg')} style={styles.logo} />
+                {
+                    slide === 0 ?
+                        <View style={styles.formSlide}>
+                            <Text style={styles.header}>Sign Up</Text>
+                            <SignUp setSlide={setSlide} />
+                        </View> :
+                        <View style={styles.formSlide}>
+                            <Text style={styles.header}>Sign In</Text>
+                            <SignIn setSlide={setSlide} />
+                        </View>
+                }
+            </View>
+        );
+    }
 }
 
 const styles = StyleSheet.create({

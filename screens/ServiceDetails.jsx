@@ -377,7 +377,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
     },
     order: {
-        backgroundColor: '#2d3436',
+        backgroundColor: '#d63031',
         margin: 10,
         paddingVertical: 15,
         borderRadius: 10,
