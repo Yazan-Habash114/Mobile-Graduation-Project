@@ -74,6 +74,7 @@ const SignIn = ({ setSlide }) => {
 
                             AsyncStorage.setItem('loggedIn', 'true')
                             AsyncStorage.setItem('id', '' + response.data)
+                            AsyncStorage.setItem('password', password)
                             accountType === 'User' ? (
                                 AsyncStorage.setItem('account', 'USER')
                             ) : (

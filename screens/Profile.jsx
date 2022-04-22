@@ -14,26 +14,29 @@ const Profile = () => {
     const [accountId, setAccountId] = React.useState(null);
 
     React.useEffect(() => {
-        AsyncStorage.getItem('account').then(value => {
-            if (value === 'GARAGE') {
-                AsyncStorage.getItem('id').then(value => {
-                    axios.get(`http://${ipAdd}:${springPort}/garages/${parseInt(value)}`).then(response => {
-                        setAccountType('GARAGE');
-                        setAccountObj(response.data);
-                        setAccountId(response.data.garageID);
+        const unsubscribe = navigation.addListener('focus', () => {
+            AsyncStorage.getItem('account').then(value => {
+                if (value === 'GARAGE') {
+                    AsyncStorage.getItem('id').then(value => {
+                        axios.get(`http://${ipAdd}:${springPort}/garages/${parseInt(value)}`).then(response => {
+                            setAccountType('GARAGE');
+                            setAccountObj(response.data);
+                            setAccountId(response.data.garageID);
+                        })
                     })
-                })
-            } else if (value === 'USER') {
-                AsyncStorage.getItem('id').then(value => {
-                    axios.get(`http://${ipAdd}:${springPort}/users/${parseInt(value)}`).then(response => {
-                        setAccountType('USER');
-                        setAccountObj(response.data);
-                        setAccountId(response.data.id);
+                } else if (value === 'USER') {
+                    AsyncStorage.getItem('id').then(value => {
+                        axios.get(`http://${ipAdd}:${springPort}/users/${parseInt(value)}`).then(response => {
+                            setAccountType('USER');
+                            setAccountObj(response.data);
+                            setAccountId(response.data.id);
+                        })
                     })
-                })
-            }
+                }
+            })
         })
-    }, []);
+        return unsubscribe
+    }, [navigation]);
 
     const navigation = useNavigation()
 
@@ -71,7 +74,12 @@ const Profile = () => {
                 </Text>
             </View>
             <View style={styles.bar}>
-                <TouchableOpacity onPress={() => navigation.navigate('Edit your profile')}>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('Edit your profile', {
+                        accountObj: accountObj,
+                        accountType: accountType,
+                        accountId: accountId
+                    })}>
                     <Text style={styles.barElements}>Edit profile</Text>
                 </TouchableOpacity>
 
@@ -99,9 +107,6 @@ const Profile = () => {
                 }
             </View>
             <View style={styles.bar}>
-                <TouchableOpacity onPress={() => setShowWindow(true)}>
-                    <Text style={styles.barElements}>Delete Account</Text>
-                </TouchableOpacity>
                 <TouchableOpacity onPress={() => {
                     clearAsyncStorage()
                     navigation.reset({
