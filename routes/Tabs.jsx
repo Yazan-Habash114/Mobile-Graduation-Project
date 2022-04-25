@@ -15,11 +15,11 @@ export default function App() {
                     tabBarIcon: ({ focused, color, size }) => {
                         let iconName;
 
-                        if (route.name === 'Profile Stack') {
+                        if (route.name === 'Profile') {
                             iconName = focused ? 'person' : 'person';
                         } else if (route.name === 'Map') {
                             iconName = focused ? 'map' : 'map'
-                        } else if (route.name === 'HomePage') {
+                        } else if (route.name === 'Go Home') {
                             iconName = focused ? 'home' : 'home'
                         }
 
@@ -30,8 +30,8 @@ export default function App() {
                     tabBarInactiveTintColor: '#2d3436',
                 })}
             >
-                <Tab.Screen options={{ headerShown: false }} name="HomePage" component={HomeStack} />
-                <Tab.Screen options={{ headerShown: false }} name="Profile Stack" component={ProfileStack} />
+                <Tab.Screen options={{ headerShown: false }} name="Go Home" component={HomeStack} />
+                <Tab.Screen options={{ headerShown: false }} name="Profile" component={ProfileStack} />
                 <Tab.Screen options={{ headerShown: false }} name="Map" component={MapStack} />
             </Tab.Navigator>
         </View>

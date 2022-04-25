@@ -21,6 +21,7 @@ const BookedService = ({ item, accountId }) => {
             if (item.slotTimes[i].bookedUserID === accountId) {
                 setSlotReserved(item.slotTimes[i])
             }
+            // else, the user has ordered the service
         }
     }, [])
 
