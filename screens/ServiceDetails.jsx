@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, View, StyleSheet, Image, TouchableOpacity, FlatList } from "react-native"
 import { WebView } from 'react-native-webview'
-import { ipAdd, apiKey, springPort } from "../global functions and info/global"
+import { ipAdd, apiKey, springPort, port } from "../global functions and info/global"
 import * as Location from 'expo-location'
 import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
@@ -23,19 +23,21 @@ const ServiceDetails = ({ route }) => {
     const [reservedSlot, setReservedSlot] = React.useState(null);
 
     const [location, setLocation] = React.useState(null);
-    const [errorMsg, setErrorMsg] = React.useState(null);
     const [myAccountId, setMyAccountId] = React.useState(null);
 
     const [rating, setRating] = React.useState(0)
 
     React.useEffect(() => {
-        axios.get(`http://${ipAdd}:${springPort}/garages/${service.supportedGarageID}`).then(response => setGarage(response.data)).catch(error => alert('error'))
-        setServiceID(service.serviceID);
-        setCanDeliver(service.canDeliver);
-        setSlotTimes(service.slotTimes);
-        setGarageId(service.supportedGarageID);
-        setGarageLocation(service.supportedGarageLocation);
-    }, [slotTimes]);
+        const unsubscribe = navigation.addListener('focus', () => {
+            axios.get(`http://${ipAdd}:${springPort}/garages/${service.supportedGarageID}`).then(response => setGarage(response.data)).catch(error => console.log('error'))
+            setServiceID(service.serviceID);
+            setCanDeliver(service.canDeliver);
+            setSlotTimes(service.slotTimes);
+            setGarageId(service.supportedGarageID);
+            setGarageLocation(service.supportedGarageLocation);
+        })
+        return unsubscribe
+    }, [slotTimes, navigation]);
 
     const navigation = useNavigation()
 
@@ -73,24 +75,35 @@ const ServiceDetails = ({ route }) => {
                 <View style={styles.content}>
                     <Text style={styles.title}>{service.name}</Text>
                     <View style={styles.info}>
-                        <View style={styles.keys}>
-                            {garage ?
-                                <Text style={styles.key}>Supporting Garage: </Text> : null
-                            }
-                            <Text style={styles.key}>Name: </Text>
-                            <Text style={styles.key}>Price: </Text>
-                            <Text style={styles.key}>Rating: </Text>
+                        <View style={styles.row}>
+                            {garage ? (
+                                <View style={styles.row}>
+                                    <Text style={styles.key}>Supporting Garage: </Text>
+                                    <TouchableOpacity onPress={() => {
+                                        setGarageLocation(null)
+                                        navigation.navigate('Garage Page', {
+                                            garage: garage,
+                                        })
+                                    }}>
+                                        <Text style={styles.value}>{garage.garageName}</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            ) : null}
                         </View>
-                        <View style={styles.values}>
-                            {garage ?
-                                <TouchableOpacity onPress={() => navigation.navigate('Garage Page', {
-                                    garage: garage,
-                                })}>
-                                    <Text style={styles.value}>{garage.garageName}</Text>
-                                </TouchableOpacity> : null
-                            }
+
+                        <View style={styles.row}>
+                            <Text style={styles.key}>Name: </Text>
                             <Text style={styles.value}>{service.serviceName}</Text>
+                        </View>
+
+                        <View style={styles.row}>
+                            <Text style={styles.key}>Price: </Text>
                             <Text style={styles.value}>${service.price}</Text>
+                        </View>
+
+                        <View style={styles.row}>
+                            <Text style={styles.key}>Rating: </Text>
+
                             {
                                 service.rateValue === 0.0 ? (
                                     <Text style={styles.value}>Not rated yet</Text>
@@ -140,9 +153,10 @@ const ServiceDetails = ({ route }) => {
                                         });
                                         setReservedSlot(null)
                                         setSlotTimes(copy)
+                                        alert('You have cancelled booking the service successfully')
                                     }}
                                 >
-                                    <Text style={styles.confirmUnbooking}>Confirm Unbooking</Text>
+                                    <Text style={styles.confirmUnbooking}>Cancel Booking</Text>
                                 </TouchableOpacity>
                             ) :
                             (
@@ -161,6 +175,7 @@ const ServiceDetails = ({ route }) => {
                                             });
                                             setReservedSlot(choosedSlot)
                                             setSlotTimes(copy)
+                                            alert('You have booked the service successfully')
                                         } else {
                                             alert("You should choose a time to confirm booking")
                                         }
@@ -183,7 +198,7 @@ const ServiceDetails = ({ route }) => {
                         canDeliver ? (
                             <TouchableOpacity
                                 style={styles.order}
-                                onPress={() => alert('The service has been booked')}
+                                onPress={() => alert('The service has been ordered')}
                             >
                                 <Text style={styles.orderText}>ORDER THIS SERVICE</Text>
                             </TouchableOpacity>
@@ -202,15 +217,15 @@ const ServiceDetails = ({ route }) => {
                             step={0.5}
                             onSlidingComplete={value => sliderHandler(value)}
                         />
-                        <Text style={styles.ratingText}>Rating: {rating}</Text>
+                        <Text style={styles.ratingText}>Set Rating: {rating}</Text>
                     </View>
 
-                    {/* {location != null ? <WebView
+                    {location && garageLocation ? <WebView
                         nestedScrollEnabled
                         style={styles.map}
                         originWhitelist={['*']}
                         source={{ uri: `http://${ipAdd}:${port}/using-map/${location.coords.longitude}/${location.coords.latitude}/${garageLocation.longitude}/${garageLocation.latitude}` }}
-                    /> : null} */}
+                    /> : null}
                 </View>
             )
         }
@@ -265,13 +280,6 @@ const ServiceDetails = ({ route }) => {
         })();
     }, [])
 
-    let text = 'Waiting..';
-    if (errorMsg) {
-        text = errorMsg;
-    } else if (location) {
-        text = JSON.stringify(location);
-    }
-
     return (
         <View style={styles.container}>
             <FlatList
@@ -310,19 +318,10 @@ const styles = StyleSheet.create({
     info: {
         marginVertical: 10,
         display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
     },
-    keys: {
-        flex: 1,
+    row: {
         display: 'flex',
-        alignItems: 'stretch',
-    },
-    values: {
-        flex: 1,
-        display: 'flex',
-        alignItems: 'stretch',
+        flexDirection: 'row'
     },
     key: {
         fontWeight: 'bold',
@@ -375,6 +374,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         height: 400,
         marginHorizontal: 10,
+        marginVertical: 15,
     },
     order: {
         backgroundColor: '#d63031',

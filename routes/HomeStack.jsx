@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StyleSheet, View } from 'react-native';
+import GaragePage from '../screens/GaragePage';
 import Home from '../screens/HomePage';
 import ProblemDiagnosis from '../screens/ProblemDiagnosis';
 import GarageStack from './GarageStack';
@@ -14,6 +15,7 @@ const HomeStack = () => {
                 <Stack.Screen options={{ headerShown: false }} name="Home" component={Home} />
                 <Stack.Screen options={{ headerShown: false }} name="Service Stack" component={ServiceStack} />
                 <Stack.Screen options={{ headerShown: false }} name="Garage Stack" component={GarageStack} />
+                <Stack.Screen options={{ headerShown: false }} name="Garage Page" component={GaragePage} />
                 <Stack.Screen name="Problem Diagnosis" component={ProblemDiagnosis} />
             </Stack.Navigator>
         </View>

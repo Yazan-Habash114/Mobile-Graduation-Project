@@ -3,7 +3,6 @@ import { Text, ScrollView, StyleSheet, Image, View, TouchableOpacity } from "rea
 import ProfileImage from "../components/Profile/profile-image/ProfileImage"
 import { clearAsyncStorage, ipAdd, springPort } from "../global functions and info/global"
 import { useNavigation } from "@react-navigation/native"
-import ConfirmWindow from "../components/Profile/confirm-window/ConfirmWindow"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import axios from "axios"
 
@@ -39,8 +38,6 @@ const Profile = () => {
     }, [navigation]);
 
     const navigation = useNavigation()
-
-    const [showConfirmWindow, setShowWindow] = React.useState(false)
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -80,7 +77,7 @@ const Profile = () => {
                         accountType: accountType,
                         accountId: accountId
                     })}>
-                    <Text style={styles.barElements}>Edit profile</Text>
+                    <Text style={styles.barElements}>Edit Your Profile</Text>
                 </TouchableOpacity>
 
                 {
@@ -115,10 +112,9 @@ const Profile = () => {
                     })
                     // navigation.navigate('Login/Register')
                 }}>
-                    <Text style={styles.barElements}>Sign Out</Text>
+                    <Text style={styles.barElements}>Log Out</Text>
                 </TouchableOpacity>
             </View>
-            {showConfirmWindow ? <ConfirmWindow setShowWindow={setShowWindow} /> : null}
         </ScrollView>
     )
 }
@@ -146,6 +142,7 @@ const styles = StyleSheet.create({
         color: '#fdcb6e',
         fontSize: 18,
         textAlign: 'center',
+        fontWeight: 'bold',
     },
     bar: {
         display: 'flex',

@@ -7,6 +7,7 @@ import { Feather } from '@expo/vector-icons';
 import { WebView } from 'react-native-webview';
 import { ipAdd, port, springPort } from '../../../global functions and info/global';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Picker } from '@react-native-picker/picker';
 
 const LocationPanel = ({ setSlide }) => {
 
@@ -14,6 +15,7 @@ const LocationPanel = ({ setSlide }) => {
     const [endTime, setEndTime] = useState('No end time chosen yet')
     const [location, setLocation] = useState('')
     const [id, setId] = useState(null)
+    const [carType, setCarType] = useState('BMW')
 
     const navigation = useNavigation()
 
@@ -127,6 +129,15 @@ const LocationPanel = ({ setSlide }) => {
             </TouchableOpacity>
             <Text style={styles.time}>{endTime}</Text>
 
+            <Picker
+                style={styles.dropList}
+                onValueChange={(itemValue, itemIndex) => setCarType(itemValue)}
+                selectedValue={carType}
+            >
+                <Picker.Item label="BMW" value="BMW" />
+                <Picker.Item label="Toyotta" value="Toyotta" />
+            </Picker>
+
             <DateTimePicker
                 isVisible={isStartTimePickerVisible}
                 mode="time"
@@ -157,7 +168,7 @@ const LocationPanel = ({ setSlide }) => {
                 ).then(reponse => {
                     axios.post(
                         `http://${ipAdd}:${springPort}/garages/${id}/profile/setGarageStartAndEndTime`,
-                        JSON.stringify([startTime, endTime]),
+                        JSON.stringify([startTime, endTime, carType]),
                         {
                             headers: {
                                 "Content-type": "application/json; charset=UTF-8",
@@ -198,6 +209,12 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         color: "#d63031",
         fontSize: 18
+    },
+    dropList: {
+        width: '45%',
+        color: 'white',
+        backgroundColor: '#d63031',
+        marginVertical: 10,
     },
     timePicker: {
         backgroundColor: 'black',

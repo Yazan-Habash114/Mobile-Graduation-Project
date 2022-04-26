@@ -109,12 +109,12 @@ const AllMyServices = ({ route }) => {
                     <Text style={styles.addServiceText}>Add New Service</Text>
                     <Ionicons name="add" size={24} color="white" />
                 </TouchableOpacity>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                     onPress={() => setShowDatePicker(true)}>
                     <Text style={styles.chooseDate}>Choose Date</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
 
-                <Text style={styles.dateSpan}>All services on {date}</Text>
+                {/* <Text style={styles.dateSpan}>All services on {date}</Text> */}
 
                 <DatePicker
                     isVisible={showDatePicker}
@@ -192,6 +192,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
+        marginVertical: 10,
     },
     addServiceText: {
         color: '#dfe6e9',
@@ -201,7 +202,7 @@ const styles = StyleSheet.create({
     row: {
         display: 'flex',
         flexDirection: 'row',
-        marginVertical: 10,
+        marginTop: 10,
     },
 })
 

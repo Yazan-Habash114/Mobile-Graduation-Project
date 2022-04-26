@@ -22,7 +22,7 @@ const GaragePage = ({ route }) => {
 
     return (
         <View style={styles.container}>
-            <ScrollView contentContainerStyle={{ flex: 1 }}>
+            <ScrollView>
                 <Image
                     style={styles.img}
                     source={{ uri: `http://${ipAdd}:${springPort}/garages/${garage.garageID}/profileImage/${localCounter}` }}
@@ -55,12 +55,14 @@ const GaragePage = ({ route }) => {
                     <Text style={styles.services}>{garage.garageName} services</Text>
                 </TouchableOpacity>
 
-                {/* <WebView
-                    style={styles.map}
-                    nestedScrollEnabled
-                    originWhitelist={['*']}
-                    source={{ uri: `http://${ipAdd}:${port}/contactMap/${garage.garageLocation.longitude}/${garage.garageLocation.latitude}` }}
-                /> */}
+                {garage ? (
+                    <WebView
+                        style={styles.map}
+                        nestedScrollEnabled
+                        originWhitelist={['*']}
+                        source={{ uri: `http://${ipAdd}:${port}/contactMap/${garage.garageLocation.longitude}/${garage.garageLocation.latitude}` }}
+                    />
+                ) : null}
             </ScrollView>
         </View>
     )
@@ -132,6 +134,7 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         marginHorizontal: 10,
         borderRadius: 10,
+        height: 200,
     }
 })
 

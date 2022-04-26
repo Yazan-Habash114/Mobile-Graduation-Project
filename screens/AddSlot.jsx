@@ -84,27 +84,35 @@ const AddSlot = ({ route }) => {
 
     const handleConfirmEnd = (time) => {
         hideEndTimePicker();
-        let hours = time.getHours();
-        let minutes = time.getMinutes();
+        let hours = time.getHours()
+        let minutes = time.getMinutes()
         let endTime = ''
-        // setTime()
-        if (hours < 10) {
-            if (minutes < 10) {
-                endTime = "0" + hours + ":0" + minutes + ":00"
+
+        let startHour = parseInt(startTime.split(':')[0])
+        let startMin = parseInt(startTime.split(':')[1])
+
+        if (startHour < hours) {
+            // setTime()
+            if (hours < 10) {
+                if (minutes < 10) {
+                    endTime = "0" + hours + ":0" + minutes + ":00"
+                }
+                else {
+                    endTime = "0" + hours + ":" + minutes + ":00"
+                }
+            } else {
+                if (minutes < 10) {
+                    endTime = hours + ":0" + minutes + ":00"
+                }
+                else {
+                    endTime = hours + ":" + minutes + ":00"
+                }
             }
-            else {
-                endTime = "0" + hours + ":" + minutes + ":00"
-            }
+            console.log(endTime)
+            setEndTime(endTime)
         } else {
-            if (minutes < 10) {
-                endTime = hours + ":0" + minutes + ":00"
-            }
-            else {
-                endTime = hours + ":" + minutes + ":00"
-            }
+            alert('You should choose suitable start and end time')
         }
-        console.log(endTime)
-        setEndTime(endTime)
     };
 
     // Save Changes

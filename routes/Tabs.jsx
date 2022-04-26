@@ -15,7 +15,7 @@ export default function App() {
                     tabBarIcon: ({ focused, color, size }) => {
                         let iconName;
 
-                        if (route.name === 'Profile') {
+                        if (route.name === 'Go Profile') {
                             iconName = focused ? 'person' : 'person';
                         } else if (route.name === 'Map') {
                             iconName = focused ? 'map' : 'map'
@@ -31,7 +31,7 @@ export default function App() {
                 })}
             >
                 <Tab.Screen options={{ headerShown: false }} name="Go Home" component={HomeStack} />
-                <Tab.Screen options={{ headerShown: false }} name="Profile" component={ProfileStack} />
+                <Tab.Screen options={{ headerShown: false }} name="Go Profile" component={ProfileStack} />
                 <Tab.Screen options={{ headerShown: false }} name="Map" component={MapStack} />
             </Tab.Navigator>
         </View>

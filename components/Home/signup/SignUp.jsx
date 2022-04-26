@@ -38,6 +38,7 @@ const SignUp = ({ setSlide }) => {
                 style={styles.input}
                 placeholder="Phone"
                 placeholderTextColor="#a8a8a8"
+                keyboardType="numeric"
                 onChangeText={(value) => setPhone(value)}
             />
             <View style={styles.accountType}>
@@ -72,7 +73,7 @@ const SignUp = ({ setSlide }) => {
 
                     AsyncStorage.setItem('loggedIn', 'true')
                     AsyncStorage.setItem('id', '' + response.data)
-                    AsyncStorage.setImte('password', password)
+                    AsyncStorage.setItem('password', password)
                     accountType === 'User' ? (
                         AsyncStorage.setItem('account', 'USER')
                     ) : (

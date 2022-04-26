@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
         borderColor: 'white',
         borderTopWidth: 0,
         borderRadius: 15,
-        marginVertical: 15,
+        marginTop: 15,
         padding: 5,
     },
     typeTitle: {
