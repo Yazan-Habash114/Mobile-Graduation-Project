@@ -15,6 +15,10 @@ const Service = ({ item }) => {
                         navigation.navigate('Service Details', {
                             service: item
                         })
+                    } else if (value === 'GARAGE') {
+                        navigation.navigate('Edit Service', {
+                            service: item
+                        })
                     }
                 })
             }}

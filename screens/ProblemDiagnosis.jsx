@@ -1,41 +1,65 @@
 import { Text, View, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native'
 import React, { useState, useEffect } from 'react'
+import { ipAdd, springPort } from '../global functions and info/global'
+import axios from 'axios'
+import { forwardChain } from '../global functions and info/ForwardChain'
 
 const ProblemDiagnosis = () => {
 
     const [finish, setFinish] = useState(false)
     const [nextId, setNextId] = useState(0)
     const [assertions, setAssertions] = useState([])
-    const [decisionTree, setDecisionTree] = useState([
-        {
-            id: 1,
-            questionText: 'Q1 mfklcmsdklcssdmmklfdlks ?',
-            choices: [
-                {
-                    choiceText: 'Choice1',
-                    nextQuestion: 1,
-                },
-                {
-                    choiceText: 'Choice2',
-                    nextQuestion: -1,
-                }
-            ]
-        },
-        {
-            id: 2,
-            questionText: 'Q2 ljkfndmsjkfnsdjfnsdjnfds ?',
-            choices: [
-                {
-                    choiceText: 'Choice1',
-                    nextQuestion: -1,
-                },
-            ]
-        },
-    ])
+    const [KB, setKB] = useState([])
+    const [decisionTree, setDecisionTree] = useState([])
+    const [inferences, setInferences] = useState([])
 
     useEffect(() => {
         // Call the API
+        // Get Knowledge-Base
+        axios.get(`http://${ipAdd}:${springPort}/gatAllKB/`).then(response => {
+            let temp = []
+            response.data.map(row => {
+                let getRule = JSON.parse(row.rule)
+                let obj = {
+                    id: row.id,
+                    premises: getRule.premises,
+                    conclusion: getRule.conclusion
+                }
+                temp.push(obj)
+            })
+            setKB(temp)
+            // console.log(temp)
+            // console.log(response.data)
+        })
+
+        // Get Decision-Tree
+        axios.get(`http://${ipAdd}:${springPort}/getAllQuestions`).then(response => {
+            let temp = []
+            response.data.map(row => {
+                let getQuestion = JSON.parse(row.question)
+                let obj = {
+                    id: row.id,
+                    questionAttribute: getQuestion.questionAttribute,
+                    questionText: getQuestion.questionText,
+                    choices: [...getQuestion.choices]
+                }
+                temp.push(obj)
+            })
+            setDecisionTree(temp)
+        })
     }, [])
+
+    const matching = () => {
+        let response = forwardChain(KB, assertions)
+        // console.log(response)
+        setInferences(response.inferences)
+    }
+
+    useEffect(() => {
+        if (finish) {
+            matching()
+        }
+    }, [finish])
 
     return (
         <View style={styles.container}>
@@ -45,9 +69,11 @@ const ProblemDiagnosis = () => {
                     style={styles.image}
                 />
 
-                <Text style={styles.mainTitle}>
-                    Please answer all the questions to recognize your problem
-                </Text>
+                {!finish ? (
+                    <Text style={styles.mainTitle}>
+                        Please answer all the questions to recognize your problem
+                    </Text>
+                ) : null}
 
                 {/* Display the result from forward chaining algorithm */}
                 {
@@ -59,12 +85,46 @@ const ProblemDiagnosis = () => {
                             <TouchableOpacity>
                                 <Text style={styles.goMap}>Go to Map</Text>
                             </TouchableOpacity>
+                            <View style={styles.result}>
+                                <Text style={{
+                                    textAlign: 'center',
+                                    fontSize: 22,
+                                    color: 'red'
+                                }}>
+                                    Results and solutions:
+                                </Text>
+                                {
+                                    inferences.length < 1 ? (
+                                        <Text style={{ textAlign: 'center', fontSize: 18 }}>
+                                            No Inference realized
+                                        </Text>
+                                    ) : null
+                                }
+                            </View>
+
+                            {
+                                inferences.map((inference, index) => {
+                                    return (
+                                        <TouchableOpacity style={styles.inference}>
+                                            <Text style={styles.inferenceText}>
+                                                Result ({index + 1}):
+                                            </Text>
+                                            <Text style={styles.inferenceText}>
+                                                Inference: {inference.attribute}
+                                            </Text>
+                                            <Text style={styles.inferenceText}>
+                                                Details: {inference.value}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    )
+                                })
+                            }
                         </View>
                     ) : null
                 }
 
                 {/* User Interface */}
-                {decisionTree.length != 0 && nextId > -1 ? (
+                {decisionTree.length != 0 && nextId > -1 && !finish ? (
                     <View style={styles.questionView}>
                         <Text style={styles.questionText}>
                             {decisionTree[nextId].questionText}
@@ -73,15 +133,22 @@ const ProblemDiagnosis = () => {
                             decisionTree[nextId].choices.map(choice => {
                                 return (
                                     <TouchableOpacity onPress={() => {
-                                        choice.nextQuestion == -1 ? setFinish(true) : null
-                                        setNextId(choice.nextQuestion)
                                         let assertionsCopy = [...assertions]
                                         assertionsCopy.push({
-                                            attribute: decisionTree[nextId].questionText,
+                                            attribute: decisionTree[nextId].questionAttribute,
                                             value: choice.choiceText
                                         })
                                         // console.log(assertionsCopy)
                                         setAssertions(assertionsCopy)
+                                        for (let i = 0; i < decisionTree.length; i += 1) {
+                                            if (decisionTree[i].id == choice.nextQuestion) {
+                                                setNextId(i)
+                                            } else if (choice.nextQuestion < 0) {
+                                                setFinish(true)
+                                                // console.log('assertions ========== ')
+                                                // console.log(assertions)
+                                            }
+                                        }
                                     }}>
                                         <Text style={styles.choice}>
                                             {choice.choiceText}
@@ -125,6 +192,20 @@ const styles = StyleSheet.create({
         backgroundColor: '#b2bec3',
         borderRadius: 5,
         paddingVertical: 5,
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    result: {
+        textAlign: 'center',
+        marginTop: 20,
+        marginHorizontal: 10,
+        color: '#d63031',
+        fontWeight: 'bold',
+        backgroundColor: '#b2bec3',
+        borderRadius: 5,
+        padding: 5,
+        display: 'flex',
+        flexDirection: 'column',
     },
     goMap: {
         backgroundColor: '#636e72',
@@ -161,6 +242,20 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         fontSize: 18,
     },
+    inference: {
+        display: 'flex',
+        marginVertical: 5,
+        backgroundColor: '#fdcb6e',
+        marginHorizontal: 10,
+        borderRadius: 5,
+        padding: 10,
+    },
+    inferenceText: {
+        fontSize: 18,
+        marginVertical: 2,
+        color: '#2d3436',
+        fontWeight: 'bold'
+    }
 })
 
 export default ProblemDiagnosis
