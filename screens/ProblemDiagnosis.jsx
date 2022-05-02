@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { ipAdd, springPort } from '../global functions and info/global'
 import axios from 'axios'
 import { forwardChain } from '../global functions and info/ForwardChain'
+import { useNavigation } from '@react-navigation/native'
 
 const ProblemDiagnosis = () => {
 
@@ -12,6 +13,12 @@ const ProblemDiagnosis = () => {
     const [KB, setKB] = useState([])
     const [decisionTree, setDecisionTree] = useState([])
     const [inferences, setInferences] = useState([])
+
+    // Info to maps
+    const [carType, setCarType] = useState('')
+    const [problem, setProblem] = useState('all')
+
+    const navigation = useNavigation()
 
     useEffect(() => {
         // Call the API
@@ -50,7 +57,14 @@ const ProblemDiagnosis = () => {
     }, [])
 
     const matching = () => {
+        setCarType(assertions[0].value)     // From first assertion
         let response = forwardChain(KB, assertions)
+        for (let i = 0; i < response.inferences.length; i += 1) {
+            console.log(response.inferences[i])
+            if (response.inferences[i].attribute == 'Maintenance' || response.inferences[i].attribute == 'Electrical') {
+                setProblem(response.inferences[i].attribute)
+            }
+        }
         // console.log(response)
         setInferences(response.inferences)
     }
@@ -82,7 +96,9 @@ const ProblemDiagnosis = () => {
                             <Text style={styles.thanks}>
                                 Thanks for your time, we will recognize your problem and help you to choose a garage
                             </Text>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={() => navigation.navigate('Available Garages', {
+                                inference: { carType: carType, problem: problem }
+                            })}>
                                 <Text style={styles.goMap}>Go to Map</Text>
                             </TouchableOpacity>
                             <View style={styles.result}>
