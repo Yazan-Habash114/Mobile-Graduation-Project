@@ -165,6 +165,16 @@ const ServiceDetails = ({ route }) => {
                                             receiverId: garageId,
                                             slotObj: slotObj
                                         })
+                                        axios.post(
+                                            `http://${ipAdd}:${springPort}/sendNotificationFormUserForBooking/fromUser/${myId}/forGarage/${garageId}`,
+                                            `${myName} has cancelled booking on time: From ${slotObj.startTime} to ${slotObj.endTime}, at date ${slotObj.date}`,
+                                            {
+                                                headers: {
+                                                    "Content-type": "application/json; charset=UTF-8",
+                                                    "Accept": "application/json"
+                                                }
+                                            }
+                                        ).then(response => console.log('Notification inserted to DB'))
                                     }}
                                 >
                                     <Text style={styles.confirmUnbooking}>Cancel Booking</Text>
@@ -195,6 +205,16 @@ const ServiceDetails = ({ route }) => {
                                                 receiverId: garageId,
                                                 slotObj: slotObj
                                             })
+                                            axios.post(
+                                                `http://${ipAdd}:${springPort}/sendNotificationFormUserForBooking/fromUser/${myId}/forGarage/${garageId}`,
+                                                `${myName} has reserved booking on time: From ${slotObj.startTime} to ${slotObj.endTime}, at date ${slotObj.date}`,
+                                                {
+                                                    headers: {
+                                                        "Content-type": "application/json; charset=UTF-8",
+                                                        "Accept": "application/json"
+                                                    }
+                                                }
+                                            ).then(response => console.log('Notification inserted to DB'))
                                         } else {
                                             alert("You should choose a time to confirm booking")
                                         }

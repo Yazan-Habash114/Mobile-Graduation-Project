@@ -5,12 +5,15 @@ import { clearAsyncStorage, ipAdd, springPort } from "../global functions and in
 import { useNavigation } from "@react-navigation/native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import axios from "axios"
+import { SocketContext } from "../routes/Tabs"
 
 const Profile = () => {
 
     const [accountType, setAccountType] = React.useState('');
     const [accountObj, setAccountObj] = React.useState(null);
     const [accountId, setAccountId] = React.useState(null);
+
+    const { socket } = React.useContext(SocketContext)
 
     React.useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -110,6 +113,7 @@ const Profile = () => {
                         index: 0,
                         routes: [{ name: 'Login/Register' }]
                     })
+                    socket.disconnect(socket.id)
                     // navigation.navigate('Login/Register')
                 }}>
                     <Text style={styles.barElements}>Log Out</Text>

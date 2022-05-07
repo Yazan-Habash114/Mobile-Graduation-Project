@@ -8,7 +8,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { ipAdd, socketPort, springPort } from '../global functions and info/global';
 import { io } from "socket.io-client";
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import Notifications from '../screens/Notifications';
 
 export const SocketContext = React.createContext()
 
@@ -16,21 +17,59 @@ const Tab = createBottomTabNavigator();
 
 export default function App() {
 
-    const [socket, setSocket] = React.useState(null)
-    const [myName, setMyName] = React.useState('')
-    const [myId, setMyId] = React.useState('')
+    // Notifications from DB
+    const [counter, setCounter] = useState(0)
+    const [msg, setMsg] = useState([])
 
-    React.useEffect(async () => {
+    const [socket, setSocket] = useState(null)
+    const [myName, setMyName] = useState('')
+    const [myId, setMyId] = useState('')
+
+    // Listening to socket
+    useEffect(() => {
+        // Booking
+        socket?.on("booking", message => {
+            setCounter(prev => prev + 1)
+            setMsg(prev => [...prev, message])
+        })
+
+        // Unbooking
+        socket?.on("unbooking", message => {
+            setCounter(prev => prev + 1)
+            setMsg(prev => [...prev, message])
+        })
+    }, [socket])
+
+    // Get notifications from DB
+    useEffect(async () => {
+        let accountType = await AsyncStorage.getItem('account');
+        const id = await AsyncStorage.getItem('id');
+
+        accountType = accountType === 'USER' ? 'user' : 'garage';
+        axios.get(`http://${ipAdd}:${springPort}/${accountType}/${id}/notifications`)
+            .then(response => {
+                let copy = []
+                for (let i = 0; i < response.data.length; i += 1) {
+                    copy.push(response.data[i].notificationText)
+                }
+                setMsg(copy)
+                setCounter(response.data.length)
+                console.log(copy)
+            })
+    }, [])
+
+    // Initilaizing
+    useEffect(async () => {
         // Connect to socket
         const socketCopy = io.connect(`http://${ipAdd}:${socketPort}`);
         setSocket(socketCopy);
 
-        const accountType = await AsyncStorage.getItem('account');
+        let accountType = await AsyncStorage.getItem('account');
         const id = await AsyncStorage.getItem('id');
 
         if (accountType === 'GARAGE') {
             axios.get(`http://${ipAdd}:${springPort}/garages/${id}`).then(response => {
-                let name = response.data.username
+                let name = response.data.garageName
                 setMyName(name)
                 setMyId(id)
                 socketCopy.emit("enter", id, name)
@@ -46,7 +85,7 @@ export default function App() {
     }, [])
 
     return (
-        <SocketContext.Provider value={{ socket: socket, myId: myId, myName: myName }}>
+        <SocketContext.Provider value={{ socket: socket, myId: myId, myName: myName, msg: msg }}>
             <View style={styles.container}>
                 <Tab.Navigator
                     screenOptions={({ route }) => ({
@@ -59,6 +98,8 @@ export default function App() {
                                 iconName = focused ? 'map' : 'map'
                             } else if (route.name === 'Go Home') {
                                 iconName = focused ? 'home' : 'home'
+                            } else if (route.name === 'Notifications') {
+                                iconName = focused ? 'notifications' : 'notifications'
                             }
 
                             // You can return any component that you like here!
@@ -70,6 +111,7 @@ export default function App() {
                 >
                     <Tab.Screen options={{ headerShown: false }} name="Go Home" component={HomeStack} />
                     <Tab.Screen options={{ headerShown: false }} name="Go Profile" component={ProfileStack} />
+                    <Tab.Screen options={{ headerShown: false, tabBarBadge: counter === 0 ? null : counter }} name="Notifications" component={Notifications} />
                     <Tab.Screen options={{ headerShown: false }} name="Map" component={MapStack} />
                 </Tab.Navigator>
             </View>
