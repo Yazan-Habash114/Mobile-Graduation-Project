@@ -38,7 +38,7 @@ const SignIn = ({ setSlide }) => {
                     onValueChange={(itemValue, itemIndex) => setAccountType(itemValue)}
                     selectedValue={accountType}
                 >
-                    <Picker.Item label="User" value="User" />
+                    <Picker.Item label="Driver" value="User" />
                     <Picker.Item label="Garage" value="Garage" />
                 </Picker>
             </View>
