@@ -38,6 +38,12 @@ export default function App() {
             setCounter(prev => prev + 1)
             setMsg(prev => [...prev, message])
         })
+
+        // New Garage
+        socket?.on("new-garage", message => {
+            setCounter(prev => prev + 1)
+            setMsg(prev => [...prev, message])
+        })
     }, [socket])
 
     // Get notifications from DB
@@ -54,7 +60,6 @@ export default function App() {
                 }
                 setMsg(copy)
                 setCounter(response.data.length)
-                console.log(copy)
             })
     }, [])
 
