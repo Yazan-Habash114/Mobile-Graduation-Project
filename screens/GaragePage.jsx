@@ -35,6 +35,7 @@ const GaragePage = ({ route }) => {
                         <Text style={styles.rowKey}>Phone:</Text>
                         <Text style={styles.rowKey}>Start Time:</Text>
                         <Text style={styles.rowKey}>End Time:</Text>
+                        <Text style={styles.rowKey}>Car Type:</Text>
                         <Text style={styles.rowKey}>Status:</Text>
                     </View>
                     <View style={styles.value}>
@@ -42,6 +43,7 @@ const GaragePage = ({ route }) => {
                         <Text style={styles.rowValue}>{garage.garagePhoneNumber}</Text>
                         <Text style={styles.rowValue}>{garage.garageStartTime}</Text>
                         <Text style={styles.rowValue}>{garage.garageEndTime}</Text>
+                        <Text style={styles.rowValue}>{garage.carType}</Text>
                         {
                             garage.availability ?
                                 <Text style={styles.rowValueOpen}>Open</Text> :

@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet, FlatList, SafeAreaView, Text } from "react-native"
+import { View, StyleSheet, FlatList, SafeAreaView, Text, TextInput } from "react-native"
 import axios from 'axios'
 import { ipAdd, springPort } from '../global functions and info/global'
 import BookedService from '../components/BookedService/BookedService'
@@ -10,6 +10,7 @@ const BookedServices = ({ route }) => {
     const accountId = route.params
 
     const [bookedServices, setBookedServices] = React.useState([])
+    const [filter, setFilter] = React.useState('')
 
     const navigation = useNavigation()
 
@@ -30,6 +31,12 @@ const BookedServices = ({ route }) => {
     return (
         <View style={styles.container}>
             <SafeAreaView style={{ width: '100%' }}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Search for garage by name..."
+                    placeholderTextColor="#a8a8a8"
+                    onChangeText={(value) => setFilter(value)}
+                />
                 {bookedServices.length == 0 ? (
                     <Text style={styles.noBookedServices}>
                         No Services has been booked
@@ -37,7 +44,11 @@ const BookedServices = ({ route }) => {
                 ) : null}
                 <FlatList
                     nestedScrollEnabled={true}
-                    data={bookedServices}
+                    data={bookedServices.filter(service => {
+                        if (filter !== '')
+                            return service.serviceName.indexOf(filter) >= 0
+                        return service
+                    })}
                     renderItem={renderBookedServices}
                     keyExtractor={item => item.serviceID}
                 />
@@ -61,6 +72,17 @@ const styles = StyleSheet.create({
         color: '#d63031',
         textAlign: 'center',
         fontWeight: 'bold',
+    },
+    input: {
+        backgroundColor: 'black',
+        padding: 10,
+        paddingLeft: 7,
+        color: 'white',
+        fontSize: 17,
+        borderWidth: 1,
+        borderColor: "gray",
+        margin: 10,
+        borderRadius: 6,
     },
 })
 

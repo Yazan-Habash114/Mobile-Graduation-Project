@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet, FlatList, SafeAreaView, Text } from "react-native"
+import { View, StyleSheet, FlatList, SafeAreaView, Text, TextInput } from "react-native"
 import axios from 'axios'
 import { ipAdd, springPort } from '../global functions and info/global'
 import Customer from '../components/Customer/Customer'
@@ -9,6 +9,7 @@ const MyCustomers = ({ route }) => {
     const accountId = route.params
 
     const [customers, setCustomers] = React.useState([])
+    const [filter, setFilter] = React.useState('')
 
     // Flat List
     const renderCustomers = ({ item }) => {
@@ -24,6 +25,12 @@ const MyCustomers = ({ route }) => {
     return (
         <View style={styles.container}>
             <SafeAreaView style={{ width: '100%' }}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Search for garage by name..."
+                    placeholderTextColor="#a8a8a8"
+                    onChangeText={(value) => setFilter(value)}
+                />
                 {customers.length == 0 ? (
                     <Text style={styles.noCustomers}>
                         No Customers Available
@@ -31,7 +38,11 @@ const MyCustomers = ({ route }) => {
                 ) : null}
                 <FlatList
                     nestedScrollEnabled={true}
-                    data={customers}
+                    data={customers.filter(customer => {
+                        if (filter !== '')
+                            return customer.username.indexOf(filter) >= 0
+                        return customer
+                    })}
                     renderItem={renderCustomers}
                     keyExtractor={item => item.customerId}
                 />
@@ -55,6 +66,17 @@ const styles = StyleSheet.create({
         color: '#d63031',
         textAlign: 'center',
         fontWeight: 'bold',
+    },
+    input: {
+        backgroundColor: 'black',
+        padding: 10,
+        paddingLeft: 7,
+        color: 'white',
+        fontSize: 17,
+        borderWidth: 1,
+        borderColor: "gray",
+        margin: 10,
+        borderRadius: 6,
     },
 })
 
