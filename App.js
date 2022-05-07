@@ -2,10 +2,13 @@ import { StatusBar } from 'expo-status-bar';
 import {
   StyleSheet,
   SafeAreaView,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  LogBox
 } from 'react-native';
 import MainStack from './routes/MainStack';
 import dismissKeyboard from 'react-native/Libraries/Utilities/dismissKeyboard';
+
+LogBox.ignoreAllLogs(true)
 
 export default function App() {
   return (

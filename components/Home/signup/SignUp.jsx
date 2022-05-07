@@ -4,6 +4,7 @@ import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { ipAdd, springPort } from '../../../global functions and info/global';
+import { useNavigation } from '@react-navigation/native';
 
 const SignUp = ({ setSlide }) => {
 
@@ -12,6 +13,8 @@ const SignUp = ({ setSlide }) => {
     const [email, setEmail] = useState('')
     const [password, setPassowrd] = useState('')
     const [phone, setPhone] = useState('')
+
+    const navigation = useNavigation()
 
     return (
         <View style={styles.container}>
@@ -82,6 +85,12 @@ const SignUp = ({ setSlide }) => {
                     alert('New account created successfully')
                     if (accountType === 'Garage') {
                         setSlide(3)
+                    } else if (accountType) {
+                        // navigation.navigate('Tabs')
+                        navigation.reset({
+                            index: 0,
+                            routes: [{ name: 'Tabs' }]
+                        })
                     }
                 })
             }}

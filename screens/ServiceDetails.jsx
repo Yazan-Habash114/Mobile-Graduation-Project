@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Slider from '@react-native-community/slider';
+import { SocketContext } from '../routes/Tabs'
 
 const ServiceDetails = ({ route }) => {
     const { service } = route.params
@@ -40,6 +41,8 @@ const ServiceDetails = ({ route }) => {
     }, [slotTimes, navigation]);
 
     const navigation = useNavigation()
+
+    const { socket, myId, myName } = React.useContext(SocketContext)
 
     const changeSlotState = (slot) => {
         setChoosedSlot(slot)
@@ -144,8 +147,10 @@ const ServiceDetails = ({ route }) => {
                                         axios.get(`http://${ipAdd}:${springPort}/users/${myAccountId}/garages/${garageId}/services/unBookService/${serviceID}/slotTime/${reservedSlot.slotTimeID}`)
                                             .then(res => console.log(res.data))
                                         let copy = [...slotTimes]
+                                        let slotObj = undefined
                                         copy.some((obj) => {
                                             if (obj.slotTimeID == reservedSlot.slotTimeID) {
+                                                slotObj = obj
                                                 obj.booked = false
                                                 obj.bookedUserID = -1
                                                 return true;    // breaks out of the loop
@@ -154,6 +159,12 @@ const ServiceDetails = ({ route }) => {
                                         setReservedSlot(null)
                                         setSlotTimes(copy)
                                         alert('You have cancelled booking the service successfully')
+                                        socket.emit("notification-unbooking", {
+                                            senderId: myId,
+                                            senderName: myName,
+                                            receiverId: garageId,
+                                            slotObj: slotObj
+                                        })
                                     }}
                                 >
                                     <Text style={styles.confirmUnbooking}>Cancel Booking</Text>
@@ -166,8 +177,10 @@ const ServiceDetails = ({ route }) => {
                                             axios.get(`http://${ipAdd}:${springPort}/users/${myAccountId}/garages/${garageId}/services/bookService/${serviceID}/slotTime/${choosedSlot.slotTimeID}`)
                                                 .then(res => console.log(res.data))
                                             let copy = [...slotTimes]
+                                            let slotObj = undefined
                                             copy.some((obj) => {
                                                 if (obj.slotTimeID == choosedSlot.slotTimeID) {
+                                                    slotObj = obj
                                                     obj.booked = true
                                                     obj.bookedUserID = myAccountId
                                                     return true;    // breaks out of the loop
@@ -176,6 +189,12 @@ const ServiceDetails = ({ route }) => {
                                             setReservedSlot(choosedSlot)
                                             setSlotTimes(copy)
                                             alert('You have booked the service successfully')
+                                            socket.emit("notification-booking", {
+                                                senderId: myId,
+                                                senderName: myName,
+                                                receiverId: garageId,
+                                                slotObj: slotObj
+                                            })
                                         } else {
                                             alert("You should choose a time to confirm booking")
                                         }
@@ -220,12 +239,12 @@ const ServiceDetails = ({ route }) => {
                         <Text style={styles.ratingText}>Set Rating: {rating}</Text>
                     </View>
 
-                    {location && garageLocation ? <WebView
+                    {/* {location && garageLocation ? <WebView
                         nestedScrollEnabled
                         style={styles.map}
                         originWhitelist={['*']}
                         source={{ uri: `http://${ipAdd}:${port}/using-map/${location.coords.longitude}/${location.coords.latitude}/${garageLocation.longitude}/${garageLocation.latitude}` }}
-                    /> : null}
+                    /> : null} */}
                 </View>
             )
         }
