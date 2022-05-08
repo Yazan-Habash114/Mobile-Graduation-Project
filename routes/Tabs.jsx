@@ -10,12 +10,15 @@ import { ipAdd, socketPort, springPort } from '../global functions and info/glob
 import { io } from "socket.io-client";
 import React, { useState, useEffect } from 'react';
 import Notifications from '../screens/Notifications';
+import { useNavigation } from '@react-navigation/native';
 
 export const SocketContext = React.createContext()
 
 const Tab = createBottomTabNavigator();
 
-export default function App() {
+export default function Tabs({ route }) {
+
+    const navigation = useNavigation()
 
     // Notifications from DB
     const [counter, setCounter] = useState(0)
@@ -61,6 +64,19 @@ export default function App() {
                 setMsg(copy)
                 setCounter(response.data.length)
             })
+
+        if (accountType === 'user') {
+            axios.get(`http://${ipAdd}:${springPort}/user/${id}/notifications`).then(
+                response => {
+                    let copy = []
+                    for (let i = 0; i < response.data.length; i += 1) {
+                        copy.push(response.data[i].notificationText)
+                    }
+                    setMsg(copy)
+                    setCounter(response.data.length)
+                }
+            )
+        }
     }, [])
 
     // Initilaizing
@@ -78,6 +94,22 @@ export default function App() {
                 setMyName(name)
                 setMyId(id)
                 socketCopy.emit("enter", id, name)
+                if (route.params) {
+                    const garageRegister = route.params.garageRegister
+                    if (garageRegister) {
+                        socketCopy.emit("garage-register", { garageName: name })
+                        axios.post(
+                            `http://${ipAdd}:${springPort}/sendNotificationForAllUsers/fromGarage/${id}`,
+                            `New garage "${name}" has joined the app!`,
+                            {
+                                headers: {
+                                    "Content-type": "application/json; charset=UTF-8",
+                                    "Accept": "application/json"
+                                }
+                            }
+                        )
+                    }
+                }
             })
         } else if (accountType === 'USER') {
             axios.get(`http://${ipAdd}:${springPort}/users/${id}`).then(response => {
@@ -98,7 +130,7 @@ export default function App() {
                             let iconName;
 
                             if (route.name === 'Go Profile') {
-                                iconName = focused ? 'person' : 'person';
+                                iconName = focused ? 'person' : 'person'
                             } else if (route.name === 'Map') {
                                 iconName = focused ? 'map' : 'map'
                             } else if (route.name === 'Go Home') {
@@ -116,7 +148,7 @@ export default function App() {
                 >
                     <Tab.Screen options={{ headerShown: false }} name="Go Home" component={HomeStack} />
                     <Tab.Screen options={{ headerShown: false }} name="Go Profile" component={ProfileStack} />
-                    <Tab.Screen options={{ headerShown: false, tabBarBadge: counter === 0 ? null : counter }} name="Notifications" component={Notifications} />
+                    <Tab.Screen options={{ headerShown: false, tabBarBadge: counter === 0 ? null : counter }} name="Notifications" component={Notifications} initialParams={{ 'setCounter': setCounter }} />
                     <Tab.Screen options={{ headerShown: false }} name="Map" component={MapStack} />
                 </Tab.Navigator>
             </View>

@@ -180,7 +180,7 @@ const LocationPanel = ({ setSlide }) => {
                         // navigation.navigate('Tabs')
                         navigation.reset({
                             index: 0,
-                            routes: [{ name: 'Tabs' }]
+                            routes: [{ name: 'Tabs', params: { garageRegister: true } }]
                         })
                     })
                 })

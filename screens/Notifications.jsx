@@ -1,10 +1,19 @@
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, FlatList } from 'react-native';
 import React, { useContext } from 'react';
 import { SocketContext } from '../routes/Tabs';
+import { useNavigation } from '@react-navigation/native';
 
-const Notifications = () => {
+const Notifications = ({ route }) => {
 
     const { msg } = useContext(SocketContext)
+    const { setCounter } = route.params
+
+    const navigation = useNavigation()
+
+    React.useEffect(() => {
+        navigation.setOptions({ tabBarBadge: null })
+        setCounter(0)
+    }, [])
 
     // Flat List
     const renderNotification = ({ item }) => {
