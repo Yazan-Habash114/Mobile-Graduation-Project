@@ -163,11 +163,12 @@ const ServiceDetails = ({ route }) => {
                                             senderId: myId,
                                             senderName: myName,
                                             receiverId: garageId,
-                                            slotObj: slotObj
+                                            slotObj: slotObj,
+                                            serviceObj: service
                                         })
                                         axios.post(
                                             `http://${ipAdd}:${springPort}/sendNotificationFormUserForBooking/fromUser/${myId}/forGarage/${garageId}`,
-                                            `${myName} has cancelled booking on time: From ${slotObj.startTime} to ${slotObj.endTime}, at date ${slotObj.date}`,
+                                            `${myName} has cancelled booking the service (${service.serviceName}) on ${slotObj.date}, at ${slotObj.startTime} to ${slotObj.endTime}`,
                                             {
                                                 headers: {
                                                     "Content-type": "application/json; charset=UTF-8",
@@ -203,11 +204,12 @@ const ServiceDetails = ({ route }) => {
                                                 senderId: myId,
                                                 senderName: myName,
                                                 receiverId: garageId,
-                                                slotObj: slotObj
+                                                slotObj: slotObj,
+                                                serviceObj: service
                                             })
                                             axios.post(
                                                 `http://${ipAdd}:${springPort}/sendNotificationFormUserForBooking/fromUser/${myId}/forGarage/${garageId}`,
-                                                `${myName} has reserved booking on time: From ${slotObj.startTime} to ${slotObj.endTime}, at date ${slotObj.date}`,
+                                                `${myName} has reserved the service (${service.serviceName}) on ${slotObj.date}, at ${slotObj.startTime} to ${slotObj.endTime}`,
                                                 {
                                                     headers: {
                                                         "Content-type": "application/json; charset=UTF-8",
@@ -237,7 +239,38 @@ const ServiceDetails = ({ route }) => {
                         canDeliver ? (
                             <TouchableOpacity
                                 style={styles.order}
-                                onPress={() => alert('The service has been ordered')}
+                                onPress={() => {
+                                    axios.get(`http://${ipAdd}:${springPort}/users/${myAccountId}/garages/${garageId}/services/${serviceID}/orderService`)
+                                        .then(res => {
+                                            axios.post(
+                                                `http://${ipAdd}:${springPort}/users/${myAccountId}/setLocation`,
+                                                [location.coords.longitude, location.coords.latitude],
+                                                {
+                                                    headers: {
+                                                        "Content-type": "application/json; charset=UTF-8",
+                                                        "Accept": "application/json"
+                                                    }
+                                                }
+                                            )
+                                        })
+                                    alert('You have ordered the service successfully')
+                                    socket.emit("notification-ordering", {
+                                        senderId: myId,
+                                        senderName: myName,
+                                        receiverId: garageId,
+                                        serviceObj: service
+                                    })
+                                    axios.post(
+                                        `http://${ipAdd}:${springPort}/sendNotificationFormUserForBooking/fromUser/${myId}/forGarage/${garageId}`,
+                                        `${myName} has ordered the service (${service.serviceName}), needs help immediately`,
+                                        {
+                                            headers: {
+                                                "Content-type": "application/json; charset=UTF-8",
+                                                "Accept": "application/json"
+                                            }
+                                        }
+                                    ).then(response => console.log('Notification inserted to DB'))
+                                }}
                             >
                                 <Text style={styles.orderText}>ORDER THIS SERVICE</Text>
                             </TouchableOpacity>

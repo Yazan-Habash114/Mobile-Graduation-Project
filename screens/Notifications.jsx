@@ -1,7 +1,8 @@
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, FlatList } from 'react-native';
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { SocketContext } from '../routes/Tabs';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Notifications = ({ route }) => {
 
@@ -10,16 +11,27 @@ const Notifications = ({ route }) => {
 
     const navigation = useNavigation()
 
-    React.useEffect(() => {
-        navigation.setOptions({ tabBarBadge: null })
-        setCounter(0)
+    useEffect(() => {
+        AsyncStorage.getItem('counter').then(value => {
+            let temp = parseInt(value)
+            setLocalCounter(temp)
+        })
     }, [])
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            setCounter(0)
+        })
+        return unsubscribe
+    }, [navigation])
 
     // Flat List
     const renderNotification = ({ item }) => {
         return (
-            <TouchableOpacity>
-                <Text style={styles.notification}>{item}</Text>
+            <TouchableOpacity onPress={() => {
+                navigation.navigate('User Info', { from: item.from, notificationText: item.notificationText })
+            }}>
+                <Text style={styles.notification}>{item.notificationText}</Text>
             </TouchableOpacity>
         );
     };

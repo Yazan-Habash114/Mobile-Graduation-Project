@@ -9,8 +9,8 @@ import axios from 'axios';
 import { ipAdd, socketPort, springPort } from '../global functions and info/global';
 import { io } from "socket.io-client";
 import React, { useState, useEffect } from 'react';
-import Notifications from '../screens/Notifications';
 import { useNavigation } from '@react-navigation/native';
+import NotificationStack from './NotificationStack';
 
 export const SocketContext = React.createContext()
 
@@ -42,6 +42,12 @@ export default function Tabs({ route }) {
             setMsg(prev => [...prev, message])
         })
 
+        // Ordering
+        socket?.on("ordering", message => {
+            setCounter(prev => prev + 1)
+            setMsg(prev => [...prev, message])
+        })
+
         // New Garage
         socket?.on("new-garage", message => {
             setCounter(prev => prev + 1)
@@ -59,7 +65,7 @@ export default function Tabs({ route }) {
             .then(response => {
                 let copy = []
                 for (let i = 0; i < response.data.length; i += 1) {
-                    copy.push(response.data[i].notificationText)
+                    copy.push(response.data[i])
                 }
                 setMsg(copy)
                 setCounter(response.data.length)
@@ -70,7 +76,7 @@ export default function Tabs({ route }) {
                 response => {
                     let copy = []
                     for (let i = 0; i < response.data.length; i += 1) {
-                        copy.push(response.data[i].notificationText)
+                        copy.push(response.data[i])
                     }
                     setMsg(copy)
                     setCounter(response.data.length)
@@ -148,7 +154,7 @@ export default function Tabs({ route }) {
                 >
                     <Tab.Screen options={{ headerShown: false }} name="Go Home" component={HomeStack} />
                     <Tab.Screen options={{ headerShown: false }} name="Go Profile" component={ProfileStack} />
-                    <Tab.Screen options={{ headerShown: false, tabBarBadge: counter === 0 ? null : counter }} name="Notifications" component={Notifications} initialParams={{ 'setCounter': setCounter }} />
+                    <Tab.Screen options={{ headerShown: false, tabBarBadge: counter === 0 ? null : counter }} name="Notifications" component={NotificationStack} initialParams={{ 'setCounter': setCounter }} />
                     <Tab.Screen options={{ headerShown: false }} name="Map" component={MapStack} />
                 </Tab.Navigator>
             </View>

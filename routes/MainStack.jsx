@@ -6,7 +6,7 @@ import Tabs from './Tabs';
 
 const Stack = createNativeStackNavigator();
 
-export default function App() {
+export default function MainStack() {
     return (
         <View style={styles.container}>
             <NavigationContainer>

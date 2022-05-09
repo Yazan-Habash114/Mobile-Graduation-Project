@@ -9,7 +9,7 @@ import Map from '../screens/Map';
 
 const Stack = createNativeStackNavigator();
 
-const ProfileStack = () => {
+const MapStack = () => {
     return (
         <View style={styles.container}>
             <Stack.Navigator>
@@ -31,4 +31,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default ProfileStack;
+export default MapStack;

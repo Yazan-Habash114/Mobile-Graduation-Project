@@ -9,7 +9,7 @@ import AddService from '../screens/AddService';
 
 const Stack = createNativeStackNavigator();
 
-const ServiceStack = () => {
+const GarageStack = () => {
     return (
         <View style={styles.container}>
             <Stack.Navigator>
@@ -31,4 +31,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default ServiceStack;
+export default GarageStack;
