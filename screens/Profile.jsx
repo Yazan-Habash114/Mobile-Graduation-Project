@@ -86,6 +86,15 @@ const Profile = () => {
                 {
                     accountType === "GARAGE" ? (
                         <TouchableOpacity onPress={() =>
+                            navigation.navigate('Ordered/Booked Services')}>
+                            <Text style={styles.barElements}>Ordered Services By My Users</Text>
+                        </TouchableOpacity>
+                    ) : null
+                }
+
+                {
+                    accountType === "GARAGE" ? (
+                        <TouchableOpacity onPress={() =>
                             navigation.navigate('All My Services', accountObj)}>
                             <Text style={styles.barElements}>All My Services</Text>
                         </TouchableOpacity>

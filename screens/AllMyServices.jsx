@@ -148,7 +148,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'stretch',
         backgroundColor: '#636e72',
-        paddingBottom: 60,
     },
     serviceType: {
         marginHorizontal: 10,

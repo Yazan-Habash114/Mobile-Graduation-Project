@@ -5,6 +5,7 @@ import DateTimePicker from 'react-native-modal-datetime-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { ipAdd, springPort } from '../../../global functions and info/global';
+import { Picker } from '@react-native-picker/picker';
 
 const EditProfile = ({ route }) => {
 
@@ -16,6 +17,7 @@ const EditProfile = ({ route }) => {
     const [password, setPassword] = useState('')
     const [capacity, setCapacity] = useState(accountObj.capacity)
     const [phone, setPhone] = useState()
+    const [carType, setCarType] = useState('BMW')
 
     const [startTime, setStartTime] = useState('No start time chosen yet')
     const [endTime, setEndTime] = useState('No end time chosen yet')
@@ -111,7 +113,7 @@ const EditProfile = ({ route }) => {
     const saveChanges = () => {
         let data = undefined
         if (accountType === 'GARAGE') {
-            data = [username, password, startTime, endTime, capacity, phone]
+            data = [username, password, startTime, endTime, capacity, phone, carType]
         } else if (accountType === 'USER') {
             data = [username, password]
         }
@@ -169,6 +171,20 @@ const EditProfile = ({ route }) => {
                         keyboardType="numeric"
                         onChangeText={value => setCapacity(value)}
                     />
+                ) : null
+            }
+            {
+                accountType === 'GARAGE' ? (
+                    <View style={styles.timeBox}>
+                        <Picker
+                            style={styles.dropList}
+                            onValueChange={(itemValue, itemIndex) => setCarType(itemValue)}
+                            selectedValue={carType}
+                        >
+                            <Picker.Item label="BMW" value="BMW" />
+                            <Picker.Item label="Toyotta" value="Toyotta" />
+                        </Picker>
+                    </View>
                 ) : null
             }
             {
@@ -273,7 +289,13 @@ const styles = StyleSheet.create({
     },
     timeBox: {
         alignItems: 'center'
-    }
+    },
+    dropList: {
+        width: '55%',
+        color: 'white',
+        backgroundColor: '#d63031',
+        marginVertical: 10,
+    },
 })
 
 export default EditProfile

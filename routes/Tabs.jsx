@@ -48,6 +48,12 @@ export default function Tabs({ route }) {
             setMsg(prev => [...prev, message])
         })
 
+        // Unordering
+        socket?.on("unordering", message => {
+            setCounter(prev => prev + 1)
+            setMsg(prev => [...prev, message])
+        })
+
         // New Garage
         socket?.on("new-garage", message => {
             setCounter(prev => prev + 1)

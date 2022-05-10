@@ -28,6 +28,21 @@ const ServiceDetails = ({ route }) => {
 
     const [rating, setRating] = React.useState(0)
 
+    const [isOrdered, setIsOrdered] = React.useState(false)
+
+    React.useEffect(() => {
+        AsyncStorage.getItem('id').then(value => {
+            setMyAccountId(parseInt(value))
+            axios.get(`http://${ipAdd}:${springPort}/users/${value}/bookedServices`).then(resp => {
+                for (let i = 0; i < resp.data.length; i += 1) {
+                    if (resp.data[i].serviceID == service.serviceID) {
+                        setIsOrdered(true)
+                    }
+                }
+            })
+        })
+    }, [])
+
     React.useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
             axios.get(`http://${ipAdd}:${springPort}/garages/${service.supportedGarageID}`).then(response => setGarage(response.data)).catch(error => console.log('error'))
@@ -237,43 +252,76 @@ const ServiceDetails = ({ route }) => {
 
                     {
                         canDeliver ? (
-                            <TouchableOpacity
-                                style={styles.order}
-                                onPress={() => {
-                                    axios.get(`http://${ipAdd}:${springPort}/users/${myAccountId}/garages/${garageId}/services/${serviceID}/orderService`)
-                                        .then(res => {
-                                            axios.post(
-                                                `http://${ipAdd}:${springPort}/users/${myAccountId}/setLocation`,
-                                                [location.coords.longitude, location.coords.latitude],
-                                                {
-                                                    headers: {
-                                                        "Content-type": "application/json; charset=UTF-8",
-                                                        "Accept": "application/json"
-                                                    }
-                                                }
-                                            )
+                            isOrdered || reservedSlot ? (
+                                <TouchableOpacity
+                                    style={styles.order}
+                                    onPress={() => {
+                                        setReservedSlot(null)
+                                        setIsOrdered(false)
+                                        axios.get(`http://${ipAdd}:${springPort}/users/${myAccountId}/garages/${garageId}/services/${serviceID}/unOrderService`)
+                                            .then(res => { })
+                                        alert('You have cancelled ordering the service successfully')
+                                        socket.emit("notification-unordering", {
+                                            senderId: myId,
+                                            senderName: myName,
+                                            receiverId: garageId,
+                                            serviceObj: service
                                         })
-                                    alert('You have ordered the service successfully')
-                                    socket.emit("notification-ordering", {
-                                        senderId: myId,
-                                        senderName: myName,
-                                        receiverId: garageId,
-                                        serviceObj: service
-                                    })
-                                    axios.post(
-                                        `http://${ipAdd}:${springPort}/sendNotificationFormUserForBooking/fromUser/${myId}/forGarage/${garageId}`,
-                                        `${myName} has ordered the service (${service.serviceName}), needs help immediately`,
-                                        {
-                                            headers: {
-                                                "Content-type": "application/json; charset=UTF-8",
-                                                "Accept": "application/json"
+                                        axios.post(
+                                            `http://${ipAdd}:${springPort}/sendNotificationFormUserForBooking/fromUser/${myId}/forGarage/${garageId}`,
+                                            `${myName} has cancelled ordering the service (${service.serviceName}), needs help immediately`,
+                                            {
+                                                headers: {
+                                                    "Content-type": "application/json; charset=UTF-8",
+                                                    "Accept": "application/json"
+                                                }
                                             }
-                                        }
-                                    ).then(response => console.log('Notification inserted to DB'))
-                                }}
-                            >
-                                <Text style={styles.orderText}>ORDER THIS SERVICE</Text>
-                            </TouchableOpacity>
+                                        ).then(response => console.log('Notification inserted to DB'))
+                                    }}
+                                >
+                                    <Text style={styles.orderText}>CANCEL ORDERING THIS SERVICE</Text>
+                                </TouchableOpacity>
+                            ) : (
+                                <TouchableOpacity
+                                    disabled={garage?.capacity < 1}
+                                    style={garage?.capacity < 1 ? styles.orderDisabled : styles.order}
+                                    onPress={() => {
+                                        setIsOrdered(true)
+                                        axios.get(`http://${ipAdd}:${springPort}/users/${myAccountId}/garages/${garageId}/services/${serviceID}/orderService`)
+                                            .then(res => {
+                                                axios.post(
+                                                    `http://${ipAdd}:${springPort}/users/${myAccountId}/setLocation`,
+                                                    [location.coords.longitude, location.coords.latitude],
+                                                    {
+                                                        headers: {
+                                                            "Content-type": "application/json; charset=UTF-8",
+                                                            "Accept": "application/json"
+                                                        }
+                                                    }
+                                                )
+                                            })
+                                        alert('You have ordered the service successfully')
+                                        socket.emit("notification-ordering", {
+                                            senderId: myId,
+                                            senderName: myName,
+                                            receiverId: garageId,
+                                            serviceObj: service
+                                        })
+                                        axios.post(
+                                            `http://${ipAdd}:${springPort}/sendNotificationFormUserForBooking/fromUser/${myId}/forGarage/${garageId}`,
+                                            `${myName} has ordered the service (${service.serviceName}), needs help immediately`,
+                                            {
+                                                headers: {
+                                                    "Content-type": "application/json; charset=UTF-8",
+                                                    "Accept": "application/json"
+                                                }
+                                            }
+                                        ).then(response => console.log('Notification inserted to DB'))
+                                    }}
+                                >
+                                    <Text style={styles.orderText}>ORDER THIS SERVICE</Text>
+                                </TouchableOpacity>
+                            )
                         ) : null
                     }
 
@@ -304,10 +352,6 @@ const ServiceDetails = ({ route }) => {
     }
 
     const renderList = ({ item }) => {
-        AsyncStorage.getItem('id').then(value => {
-            setMyAccountId(parseInt(value))
-        })
-
         if (item.booked && item.bookedUserID == myAccountId) {
             setReservedSlot(item)
         }
@@ -453,6 +497,13 @@ const styles = StyleSheet.create({
         margin: 10,
         paddingVertical: 15,
         borderRadius: 10,
+    },
+    orderDisabled: {
+        backgroundColor: '#d63031',
+        margin: 10,
+        paddingVertical: 15,
+        borderRadius: 10,
+        opacity: 0.5,
     },
     orderText: {
         color: '#dfe6e9',
