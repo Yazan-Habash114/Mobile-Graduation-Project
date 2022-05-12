@@ -174,16 +174,23 @@ const ServiceDetails = ({ route }) => {
                                         setReservedSlot(null)
                                         setSlotTimes(copy)
                                         alert('You have cancelled booking the service successfully')
-                                        socket.emit("notification-unbooking", {
+                                        const notification = {
+                                            type: 'notification-unbooking',
                                             senderId: myId,
                                             senderName: myName,
                                             receiverId: garageId,
-                                            slotObj: slotObj,
-                                            serviceObj: service
-                                        })
+                                            receiverName: garage.garageName,
+                                            message: `${myName} has cancelled booking the service (${service.serviceName}) on ${slotObj.date}, at ${slotObj.startTime} to ${slotObj.endTime}`,
+                                            otherData: {
+                                                serviceId: service.serviceID,
+                                                slotId: slotObj.slotTimeID,
+                                                locations: null
+                                            }
+                                        }
+                                        socket.emit("notification-unbooking", notification)
                                         axios.post(
                                             `http://${ipAdd}:${springPort}/sendNotificationFormUserForBooking/fromUser/${myId}/forGarage/${garageId}`,
-                                            `${myName} has cancelled booking the service (${service.serviceName}) on ${slotObj.date}, at ${slotObj.startTime} to ${slotObj.endTime}`,
+                                            JSON.stringify(notification),
                                             {
                                                 headers: {
                                                     "Content-type": "application/json; charset=UTF-8",
@@ -215,16 +222,23 @@ const ServiceDetails = ({ route }) => {
                                             setReservedSlot(choosedSlot)
                                             setSlotTimes(copy)
                                             alert('You have booked the service successfully')
-                                            socket.emit("notification-booking", {
+                                            const notification = {
+                                                type: 'notification-booking',
                                                 senderId: myId,
                                                 senderName: myName,
                                                 receiverId: garageId,
-                                                slotObj: slotObj,
-                                                serviceObj: service
-                                            })
+                                                receiverName: garage.garageName,
+                                                message: `${myName} has reserved the service (${service.serviceName}) on ${slotObj.date}, at ${slotObj.startTime} to ${slotObj.endTime}`,
+                                                otherData: {
+                                                    serviceId: service.serviceID,
+                                                    slotId: slotObj.slotTimeID,
+                                                    locations: null
+                                                }
+                                            }
+                                            socket.emit("notification-booking", notification)
                                             axios.post(
                                                 `http://${ipAdd}:${springPort}/sendNotificationFormUserForBooking/fromUser/${myId}/forGarage/${garageId}`,
-                                                `${myName} has reserved the service (${service.serviceName}) on ${slotObj.date}, at ${slotObj.startTime} to ${slotObj.endTime}`,
+                                                JSON.stringify(notification),
                                                 {
                                                     headers: {
                                                         "Content-type": "application/json; charset=UTF-8",
@@ -261,15 +275,23 @@ const ServiceDetails = ({ route }) => {
                                         axios.get(`http://${ipAdd}:${springPort}/users/${myAccountId}/garages/${garageId}/services/${serviceID}/unOrderService`)
                                             .then(res => { })
                                         alert('You have cancelled ordering the service successfully')
-                                        socket.emit("notification-unordering", {
+                                        const notification = {
+                                            type: 'notification-unordering',
                                             senderId: myId,
                                             senderName: myName,
                                             receiverId: garageId,
-                                            serviceObj: service
-                                        })
+                                            receiverName: garage.garageName,
+                                            message: `${myName} has cancelled ordering the service (${service.serviceName})`,
+                                            otherData: {
+                                                serviceId: service.serviceID,
+                                                slotId: null,
+                                                locations: null
+                                            }
+                                        }
+                                        socket.emit("notification-unordering", notification)
                                         axios.post(
                                             `http://${ipAdd}:${springPort}/sendNotificationFormUserForBooking/fromUser/${myId}/forGarage/${garageId}`,
-                                            `${myName} has cancelled ordering the service (${service.serviceName}), needs help immediately`,
+                                            JSON.stringify(notification),
                                             {
                                                 headers: {
                                                     "Content-type": "application/json; charset=UTF-8",
@@ -301,15 +323,23 @@ const ServiceDetails = ({ route }) => {
                                                 )
                                             })
                                         alert('You have ordered the service successfully')
-                                        socket.emit("notification-ordering", {
+                                        const notification = {
+                                            type: 'notification-ordering',
                                             senderId: myId,
                                             senderName: myName,
                                             receiverId: garageId,
-                                            serviceObj: service
-                                        })
+                                            receiverName: garage.garageName,
+                                            message: `${myName} has ordered the service (${service.serviceName}), needs help immediately`,
+                                            otherData: {
+                                                serviceId: service.serviceID,
+                                                slotId: null,
+                                                locations: null
+                                            }
+                                        }
+                                        socket.emit("notification-ordering", notification)
                                         axios.post(
                                             `http://${ipAdd}:${springPort}/sendNotificationFormUserForBooking/fromUser/${myId}/forGarage/${garageId}`,
-                                            `${myName} has ordered the service (${service.serviceName}), needs help immediately`,
+                                            JSON.stringify(notification),
                                             {
                                                 headers: {
                                                     "Content-type": "application/json; charset=UTF-8",

@@ -6,7 +6,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const NotificationDetails = ({ route }) => {
 
-    const { from, notificationText } = route.params
+    const { notificationItem } = route.params
+    const from = notificationItem.from
 
     const [user, setUser] = useState(null)
 
@@ -50,7 +51,9 @@ const NotificationDetails = ({ route }) => {
                 </View>
             ) : null}
 
-            <Text style={styles.notification}>{notificationText}</Text>
+            <Text style={styles.notification}>
+                {JSON.parse(notificationItem.notificationText).message}
+            </Text>
         </View>
     )
 }

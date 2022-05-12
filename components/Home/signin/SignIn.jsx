@@ -48,7 +48,7 @@ const SignIn = ({ setSlide }) => {
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => setSlide(0)}>
-                <Text style={styles.haveAccount}>Have an account ?</Text>
+                <Text style={styles.haveAccount}>Not have an account ?</Text>
             </TouchableOpacity>
             <Button
                 title="Login"

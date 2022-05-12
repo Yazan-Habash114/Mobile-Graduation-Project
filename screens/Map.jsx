@@ -1,18 +1,29 @@
 import React from 'react'
-import { Text, ScrollView, View, StyleSheet } from "react-native"
+import { ScrollView, StyleSheet } from "react-native"
 import { WebView } from 'react-native-webview'
 import { ipAdd, port, springPort } from '../global functions and info/global'
 import * as Location from 'expo-location';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Map = () => {
   const [location, setLocation] = React.useState(null);
   const [errorMsg, setErrorMsg] = React.useState(null);
-  const [garage, setGarage] = React.useState(null)
+  const [garage, setGarage] = React.useState(null);
+
+  const [accountType, setAccountType] = React.useState(null);
+  const [accountId, setAccountId] = React.useState(null);
 
   const navigation = useNavigation()
+
+  React.useEffect(async () => {
+    const id = await AsyncStorage.getItem('id')
+    const type = await AsyncStorage.getItem('account')
+    setAccountId(id)
+    setAccountType(type)
+  }, [])
 
   React.useEffect(() => {
     (async () => {
@@ -36,20 +47,30 @@ const Map = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {location != null ? <WebView
-        onMessage={(event) => {
-          // console.log("EVENT-DATA:", event);
-          // console.log(event.nativeEvent.data);
-          axios.get(`http://${ipAdd}:${springPort}/garages/${event.nativeEvent.data}`).then(response => {
-            navigation.navigate('Garage Page', {
-              garage: response.data,
-            })
-          })
-        }}
-        nestedScrollEnabled
-        originWhitelist={['*']}
-        source={{ uri: `http://${ipAdd}:${port}/using-map/${location.coords.longitude}/${location.coords.latitude}` }}
-      /> : null}
+      {location && accountId && accountType ? (
+        accountType === 'USER' ? (
+          <WebView
+            onMessage={(event) => {
+              // console.log("EVENT-DATA:", event);
+              // console.log(event.nativeEvent.data);
+              axios.get(`http://${ipAdd}:${springPort}/garages/${event.nativeEvent.data}`).then(response => {
+                navigation.navigate('Garage Page', {
+                  garage: response.data,
+                })
+              })
+            }}
+            nestedScrollEnabled
+            originWhitelist={['*']}
+            source={{ uri: `http://${ipAdd}:${port}/using-map/${garage.garageLocation.longitude}/${garage.garageLocation.latitude}` }}
+          />
+        ) : (
+          <WebView
+            nestedScrollEnabled
+            originWhitelist={['*']}
+            source={{ uri: `http://${ipAdd}:${port}/using-map-react-native-garage/${location.coords.longitude}/${location.coords.latitude}/${accountId}` }}
+          />
+        )
+      ) : null}
     </ScrollView>
   )
 }

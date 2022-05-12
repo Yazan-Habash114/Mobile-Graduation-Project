@@ -2,7 +2,6 @@ import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, FlatList } from
 import React, { useContext, useState, useEffect } from 'react';
 import { SocketContext } from '../routes/Tabs';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Notifications = ({ route }) => {
 
@@ -10,13 +9,6 @@ const Notifications = ({ route }) => {
     const { setCounter } = route.params
 
     const navigation = useNavigation()
-
-    useEffect(() => {
-        AsyncStorage.getItem('counter').then(value => {
-            let temp = parseInt(value)
-            setLocalCounter(temp)
-        })
-    }, [])
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -29,9 +21,14 @@ const Notifications = ({ route }) => {
     const renderNotification = ({ item }) => {
         return (
             <TouchableOpacity onPress={() => {
-                navigation.navigate('User Info', { from: item.from, notificationText: item.notificationText })
+                let type = JSON.parse(item.notificationText).type
+                type !== 'notification-unordering' && type != 'notification-unbooking'
+                    && type != 'garage-register' ?
+                    navigation.navigate('User Info', { notificationItem: item }) : null
+                type === 'notification-tracking' ?
+                    navigation.navigate('Current Garage Location', { notificationItem: item }) : null
             }}>
-                <Text style={styles.notification}>{item.notificationText}</Text>
+                <Text style={styles.notification}>{JSON.parse(item.notificationText).message}</Text>
             </TouchableOpacity>
         );
     };
@@ -41,7 +38,7 @@ const Notifications = ({ route }) => {
             <SafeAreaView style={{ width: '100%' }}>
                 <FlatList
                     nestedScrollEnabled={true}
-                    data={msg.reverse()}
+                    data={msg}
                     renderItem={renderNotification}
                     keyExtractor={item => item.notificationId}
                 />
@@ -60,7 +57,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#2d3436',
         marginHorizontal: 10,
         marginVertical: 3,
-        borderRadius: 10,
+        borderBottomLeftRadius: 10,
+        borderTopRightRadius: 10,
         padding: 10,
         color: '#dfe6e9',
         fontSize: 18,

@@ -3,14 +3,26 @@ import React, { useState } from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 import axios from 'axios';
 import { ipAdd, springPort } from '../../../global functions and info/global';
+import { useNavigation } from '@react-navigation/native';
 
 const OrderedService = ({ item, myId }) => {
 
     const [enabled, setEnabled] = useState(true)
 
+    const navigation = useNavigation()
+
     return (
         <View style={enabled ? styles.body : styles.bodyDisabled}>
-            <Text style={enabled ? styles.text : styles.textDisabled}>{item.notificationText}</Text>
+            <TouchableOpacity onPress={() => {
+                if (JSON.parse(item.notificationText).type === 'notification-ordering') {
+                    navigation.navigate('Set Your Location', { text: item.notificationText })
+                }
+            }}>
+                <Text style={enabled ? styles.text : styles.textDisabled}>
+                    {JSON.parse(item.notificationText).message}
+                </Text>
+            </TouchableOpacity>
+
             <TouchableOpacity
                 disabled={!enabled}
                 onPress={() => {
@@ -20,6 +32,7 @@ const OrderedService = ({ item, myId }) => {
                     })
                 }}>
                 <Text style={styles.icon}>
+                    <Text style={styles.iconText}>Mark as done</Text>
                     <MaterialIcons name="done" size={24} color={enabled ? "black" : "white"} />
                 </Text>
             </TouchableOpacity>
@@ -35,7 +48,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 5,
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: 'column',
         alignItems: 'center',
     },
     bodyDisabled: {
@@ -45,21 +58,25 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 5,
         display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
+        justifyContent: 'center',
     },
     text: {
         fontSize: 18,
-        flex: 1,
-        marginRight: 4,
         color: 'black',
+        marginHorizontal: 5,
     },
     icon: {
         fontSize: 20,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderWidth: 1,
+        marginTop: 5,
+        paddingHorizontal: 10,
+        borderRadius: 5,
     },
     textDisabled: {
         fontSize: 18,
-        flex: 1,
         marginRight: 4,
         color: 'white',
     },

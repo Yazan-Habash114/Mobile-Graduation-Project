@@ -9,7 +9,6 @@ import axios from 'axios';
 import { ipAdd, socketPort, springPort } from '../global functions and info/global';
 import { io } from "socket.io-client";
 import React, { useState, useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
 import NotificationStack from './NotificationStack';
 
 export const SocketContext = React.createContext()
@@ -17,8 +16,6 @@ export const SocketContext = React.createContext()
 const Tab = createBottomTabNavigator();
 
 export default function Tabs({ route }) {
-
-    const navigation = useNavigation()
 
     // Notifications from DB
     const [counter, setCounter] = useState(0)
@@ -54,6 +51,12 @@ export default function Tabs({ route }) {
             setMsg(prev => [...prev, message])
         })
 
+        // Tracking
+        socket?.on("tracking", message => {
+            setCounter(prev => prev + 1)
+            setMsg(prev => [...prev, message])
+        })
+
         // New Garage
         socket?.on("new-garage", message => {
             setCounter(prev => prev + 1)
@@ -73,7 +76,7 @@ export default function Tabs({ route }) {
                 for (let i = 0; i < response.data.length; i += 1) {
                     copy.push(response.data[i])
                 }
-                setMsg(copy)
+                setMsg(copy.sort((a, b) => b.notificationId - a.notificationId))
                 setCounter(response.data.length)
             })
 
@@ -84,7 +87,7 @@ export default function Tabs({ route }) {
                     for (let i = 0; i < response.data.length; i += 1) {
                         copy.push(response.data[i])
                     }
-                    setMsg(copy)
+                    setMsg(copy.sort((a, b) => b.notificationId - a.notificationId))
                     setCounter(response.data.length)
                 }
             )
@@ -109,10 +112,23 @@ export default function Tabs({ route }) {
                 if (route.params) {
                     const garageRegister = route.params.garageRegister
                     if (garageRegister) {
-                        socketCopy.emit("garage-register", { garageName: name })
+                        const notification = {
+                            type: 'garage-register',
+                            senderId: id,
+                            senderName: name,
+                            receiverId: -1,
+                            receiverName: -1,
+                            message: `New garage "${name}" has joined the app!`,
+                            otherData: {
+                                serviceId: null,
+                                slotId: null,
+                                locations: null
+                            }
+                        }
+                        socketCopy.emit("garage-register", notification)
                         axios.post(
                             `http://${ipAdd}:${springPort}/sendNotificationForAllUsers/fromGarage/${id}`,
-                            `New garage "${name}" has joined the app!`,
+                            JSON.stringify(notification),
                             {
                                 headers: {
                                     "Content-type": "application/json; charset=UTF-8",
@@ -134,7 +150,12 @@ export default function Tabs({ route }) {
     }, [])
 
     return (
-        <SocketContext.Provider value={{ socket: socket, myId: myId, myName: myName, msg: msg }}>
+        <SocketContext.Provider value={{
+            socket: socket,
+            myId: myId,
+            myName: myName,
+            msg: msg
+        }}>
             <View style={styles.container}>
                 <Tab.Navigator
                     screenOptions={({ route }) => ({

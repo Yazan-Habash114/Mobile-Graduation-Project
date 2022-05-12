@@ -9,7 +9,10 @@ const OrderedServicesByUsers = () => {
 
     // Flat List
     const renderOrderService = ({ item }) => {
-        return <OrderedService item={item} myId={myId} />
+        let type = JSON.parse(item.notificationText).type
+        if (type === 'notification-ordering' || type === 'notification-booking')
+            return <OrderedService item={item} myId={myId} />
+        return null
     };
 
     return (

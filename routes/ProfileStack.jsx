@@ -13,6 +13,7 @@ import BookedServices from '../screens/BookedServices';
 import GaragePage from '../screens/GaragePage'
 import ServiceDetails from '../screens/ServiceDetails';
 import OrderedServicesByUsers from '../screens/OrderedServicesByUsers';
+import SetYourLocation from '../screens/SetYourLocation';
 
 const Stack = createNativeStackNavigator();
 
@@ -33,6 +34,7 @@ const ProfileStack = () => {
                 <Stack.Screen name="Garage Page" component={GaragePage} />
                 <Stack.Screen name="Your booked service details" component={ServiceDetails} />
                 <Stack.Screen name="Ordered/Booked Services" component={OrderedServicesByUsers} />
+                <Stack.Screen name="Set Your Location" component={SetYourLocation} />
             </Stack.Navigator>
         </View>
     );
