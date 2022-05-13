@@ -57,7 +57,7 @@ const ProblemDiagnosis = () => {
     }, [])
 
     const matching = () => {
-        setCarType(assertions[0].value)     // From first assertion
+        setCarType(assertions[1].value)     // From first assertion
         let response = forwardChain(KB, assertions)
         for (let i = 0; i < response.inferences.length; i += 1) {
             console.log(response.inferences[i])
