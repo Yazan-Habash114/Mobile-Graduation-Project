@@ -27,15 +27,28 @@ const Customer = ({ item }) => {
                     <Text style={styles.infoHidden}>
                         Service Type: {item.serviceType}
                     </Text>
-                    <Text style={styles.infoHidden}>
-                        Date: {item.slotTimes.date}
-                    </Text>
-                    <Text style={styles.infoHidden}>
-                        Start Time: {item.slotTimes.startTime}
-                    </Text>
-                    <Text style={styles.infoHidden}>
-                        End Time: {item.slotTimes.endTime}
-                    </Text>
+                    {
+                        item.slotTimes ? (
+                            <Text style={styles.infoHidden}>
+                                Date: {item.slotTimes.date}
+                            </Text>
+
+                        ) : null
+                    }
+                    {
+                        item.slotTimes ? (
+                            <Text style={styles.infoHidden}>
+                                Start Time: {item.slotTimes.startTime}
+                            </Text>
+                        ) : null
+                    }
+                    {
+                        item.slotTimes ? (
+                            <Text style={styles.infoHidden}>
+                                End Time: {item?.slotTimes?.endTime}
+                            </Text>
+                        ) : null
+                    }
                 </View>
             </View>
         )
