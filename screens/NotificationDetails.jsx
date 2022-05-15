@@ -40,12 +40,12 @@ const NotificationDetails = ({ route }) => {
 
             {user ? (
                 <View style={styles.info}>
-                    <View style={styles.key}>
+                    <View style={styles.tuple}>
                         <Text style={styles.rowKey}>Email:</Text>
-                        <Text style={styles.rowKey}>Phone:</Text>
-                    </View>
-                    <View style={styles.value}>
                         <Text style={styles.rowValue}>{user.email}</Text>
+                    </View>
+                    <View style={styles.tuple}>
+                        <Text style={styles.rowKey}>Phone:</Text>
                         <Text style={styles.rowValue}>{user.phone_number}</Text>
                     </View>
                 </View>
@@ -83,19 +83,16 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         marginVertical: 10,
         display: 'flex',
-        flexDirection: 'row',
     },
-    key: {
+    tuple: {
         display: 'flex',
-    },
-    value: {
-        flex: 1,
-        display: 'flex',
+        flexWrap: 'wrap',
     },
     rowKey: {
         color: '#ecf0f1',
         fontSize: 20,
         fontWeight: 'bold',
+        marginRight: 5,
     },
     rowValue: {
         color: '#ecf0f1',

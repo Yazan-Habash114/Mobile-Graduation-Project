@@ -30,20 +30,28 @@ const GaragePage = ({ route }) => {
                 <Text style={styles.garageName}>{garage.garageName}</Text>
 
                 <View style={styles.info}>
-                    <View style={styles.key}>
+                    <View style={styles.tuple}>
                         <Text style={styles.rowKey}>Email:</Text>
-                        <Text style={styles.rowKey}>Phone:</Text>
-                        <Text style={styles.rowKey}>Start Time:</Text>
-                        <Text style={styles.rowKey}>End Time:</Text>
-                        <Text style={styles.rowKey}>Car Type:</Text>
-                        <Text style={styles.rowKey}>Status:</Text>
-                    </View>
-                    <View style={styles.value}>
                         <Text style={styles.rowValue}>{garage.garageEmail}</Text>
+                    </View>
+                    <View style={styles.tuple}>
+                        <Text style={styles.rowKey}>Phone:</Text>
                         <Text style={styles.rowValue}>{garage.garagePhoneNumber}</Text>
+                    </View>
+                    <View style={styles.tuple}>
+                        <Text style={styles.rowKey}>Start Time:</Text>
                         <Text style={styles.rowValue}>{garage.garageStartTime}</Text>
+                    </View>
+                    <View style={styles.tuple}>
+                        <Text style={styles.rowKey}>End Time:</Text>
                         <Text style={styles.rowValue}>{garage.garageEndTime}</Text>
+                    </View>
+                    <View style={styles.tuple}>
+                        <Text style={styles.rowKey}>Car Type:</Text>
                         <Text style={styles.rowValue}>{garage.carType}</Text>
+                    </View>
+                    <View style={styles.tuple}>
+                        <Text style={styles.rowKey}>Status:</Text>
                         {
                             garage.availability ?
                                 <Text style={styles.rowValueOpen}>Open</Text> :
@@ -51,6 +59,7 @@ const GaragePage = ({ route }) => {
                         }
                     </View>
                 </View>
+
                 <TouchableOpacity onPress={() => navigation.navigate('Garage Services', {
                     garage: garage
                 })}>
@@ -95,20 +104,17 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         marginVertical: 10,
         display: 'flex',
+    },
+    tuple: {
+        flex: 1,
+        display: 'flex',
         flexDirection: 'row',
-    },
-    key: {
-        flex: 1,
-        display: 'flex',
-    },
-    value: {
-        flex: 1,
-        display: 'flex',
     },
     rowKey: {
         color: '#ecf0f1',
         fontSize: 20,
         fontWeight: 'bold',
+        marginRight: 10,
     },
     rowValue: {
         color: '#ecf0f1',

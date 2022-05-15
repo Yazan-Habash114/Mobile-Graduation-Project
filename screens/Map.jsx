@@ -21,6 +21,9 @@ const Map = () => {
   React.useEffect(async () => {
     const id = await AsyncStorage.getItem('id')
     const type = await AsyncStorage.getItem('account')
+    axios.get(`http://${ipAdd}:${springPort}/garages/${id}`).then(response => {
+      setGarage(response.data)
+    })
     setAccountId(id)
     setAccountType(type)
   }, [])
@@ -61,13 +64,13 @@ const Map = () => {
             }}
             nestedScrollEnabled
             originWhitelist={['*']}
-            source={{ uri: `http://${ipAdd}:${port}/using-map/${garage.garageLocation.longitude}/${garage.garageLocation.latitude}` }}
+            source={{ uri: `http://${ipAdd}:${port}/using-map/${location.coords.longitude}/${location.coords.latitude}` }}
           />
         ) : (
           <WebView
             nestedScrollEnabled
             originWhitelist={['*']}
-            source={{ uri: `http://${ipAdd}:${port}/using-map-react-native-garage/${location.coords.longitude}/${location.coords.latitude}/${accountId}` }}
+            source={{ uri: `http://${ipAdd}:${port}/using-map-react-native-garage/${garage?.garageLocation.longitude}/${garage?.garageLocation.latitude}/${accountId}` }}
           />
         )
       ) : null}

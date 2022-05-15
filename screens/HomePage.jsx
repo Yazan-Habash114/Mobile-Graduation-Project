@@ -1,11 +1,15 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Text, View, StyleSheet, ScrollView, Image, TouchableOpacity } from "react-native"
 import { useNavigation } from '@react-navigation/native'
-
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const HomePage = () => {
 
     const navigation = useNavigation()
+
+    const [accountType, setAccountType] = useState('')
+
+    useEffect(async () => setAccountType(await AsyncStorage.getItem('account')), [])
 
     return (
         <View style={styles.container}>
@@ -18,17 +22,21 @@ const HomePage = () => {
                     Stay in touch with iDrive, make your driving easier
                 </Text>
                 <View style={styles.content}>
-                    <View style={styles.slide}>
-                        <Image
-                            source={require('../assets/images/working.jpg')}
-                            style={styles.slideImage}
-                        />
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate('Problem Diagnosis')}
-                        >
-                            <Text style={styles.buttonStyle}>Check Your Problem</Text>
-                        </TouchableOpacity>
-                    </View>
+                    {
+                        accountType !== 'GARAGE' ? (
+                            <View style={styles.slide}>
+                                <Image
+                                    source={require('../assets/images/working.jpg')}
+                                    style={styles.slideImage}
+                                />
+                                <TouchableOpacity
+                                    onPress={() => navigation.navigate('Problem Diagnosis')}
+                                >
+                                    <Text style={styles.buttonStyle}>Check Your Problem</Text>
+                                </TouchableOpacity>
+                            </View>
+                        ) : null
+                    }
                     <View style={styles.slide}>
                         <Image
                             source={require('../assets/images/setting.jpg')}
