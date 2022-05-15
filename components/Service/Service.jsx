@@ -26,9 +26,10 @@ const Service = ({ item }) => {
         >
             <Text style={styles.name}>{item.serviceName}</Text>
             <View style={styles.subSection}>
-                <Text style={styles.text}>${item.price}</Text>
-                <Text style={styles.text}>By: {item.supportedGarageName}</Text>
+                <Text style={styles.text}>Price: ${item.price}</Text>
+                <Text style={styles.text}>Rate: {item.rateValue.toFixed(1)}/5.0</Text>
             </View>
+            <Text style={styles.text}>By: {item.supportedGarageName}</Text>
         </TouchableOpacity>
     )
 }

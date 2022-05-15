@@ -1,15 +1,18 @@
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 import axios from 'axios';
 import { ipAdd, springPort } from '../../../global functions and info/global';
 import { useNavigation } from '@react-navigation/native';
+import { SocketContext } from '../../../routes/Tabs';
 
 const OrderedService = ({ item, myId }) => {
 
     const [enabled, setEnabled] = useState(true)
 
     const navigation = useNavigation()
+
+    const { msg, setMsg } = useContext(SocketContext)
 
     return (
         <View style={enabled ? styles.body : styles.bodyDisabled}>

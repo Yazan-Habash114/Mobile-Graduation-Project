@@ -154,7 +154,8 @@ export default function Tabs({ route }) {
             socket: socket,
             myId: myId,
             myName: myName,
-            msg: msg
+            msg: msg,
+            "setMsg": setMsg,
         }}>
             <View style={styles.container}>
                 <Tab.Navigator

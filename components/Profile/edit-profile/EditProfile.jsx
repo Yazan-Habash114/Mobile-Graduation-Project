@@ -115,7 +115,7 @@ const EditProfile = ({ route }) => {
         if (accountType === 'GARAGE') {
             data = [username, password, startTime, endTime, capacity, phone, carType]
         } else if (accountType === 'USER') {
-            data = [username, password]
+            data = [username, password, phone]
         }
         axios.post(
             `http://${ipAdd}:${springPort}/${accountType === 'GARAGE' ?

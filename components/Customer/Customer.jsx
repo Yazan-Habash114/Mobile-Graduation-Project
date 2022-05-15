@@ -8,6 +8,7 @@ const Customer = ({ item }) => {
     // Image local counter
     const [localCounter, setLocalCounter] = React.useState(-1000)
     const [showHidden, setShowHidden] = React.useState(false)
+    const [customerId, setCustomerId] = React.useState(item.id)
 
     React.useEffect(() => {
         AsyncStorage.getItem('counter').then(value => {
@@ -18,6 +19,13 @@ const Customer = ({ item }) => {
 
     // Flat List
     const renderServices = ({ item }) => {
+        let index = -1
+        for (let i = 0; i < item.slotTimes?.length; i += 1) {
+            if (item.slotTimes[i].bookedUserID == customerId) {
+                index = i
+            }
+        }
+
         return (
             <View>
                 <View style={styles.service}>
@@ -28,24 +36,23 @@ const Customer = ({ item }) => {
                         Service Type: {item.serviceType}
                     </Text>
                     {
-                        item.slotTimes ? (
+                        index > -1 ? (
                             <Text style={styles.infoHidden}>
-                                Date: {item.slotTimes.date}
-                            </Text>
-
-                        ) : null
-                    }
-                    {
-                        item.slotTimes ? (
-                            <Text style={styles.infoHidden}>
-                                Start Time: {item.slotTimes.startTime}
+                                Date: {item.slotTimes[index].date}
                             </Text>
                         ) : null
                     }
                     {
-                        item.slotTimes ? (
+                        index > -1 ? (
                             <Text style={styles.infoHidden}>
-                                End Time: {item?.slotTimes?.endTime}
+                                Start Time: {item.slotTimes[index].startTime}
+                            </Text>
+                        ) : null
+                    }
+                    {
+                        index > -1 ? (
+                            <Text style={styles.infoHidden}>
+                                End Time: {item?.slotTimes[index].endTime}
                             </Text>
                         ) : null
                     }
@@ -62,7 +69,7 @@ const Customer = ({ item }) => {
             <View style={styles.shown}>
                 <Image
                     style={styles.img}
-                    source={{ uri: `http://${ipAdd}:${springPort}/users/${item.customerId}/profileImage/${localCounter}` }}
+                    source={{ uri: `http://${ipAdd}:${springPort}/users/${item.id}/profileImage/${localCounter}` }}
                 />
                 <View>
                     <Text style={styles.name}>{item.username}</Text>
@@ -74,9 +81,9 @@ const Customer = ({ item }) => {
             {showHidden ? (
                 <FlatList
                     nestedScrollEnabled={true}
-                    data={item.bookedServices}
+                    data={item.services}
                     renderItem={renderServices}
-                    keyExtractor={item => item.serviceId}
+                    keyExtractor={item => item.serviceID}
                 />
             ) : null}
         </TouchableOpacity>
