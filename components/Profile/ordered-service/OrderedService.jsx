@@ -8,7 +8,7 @@ import { SocketContext } from '../../../routes/Tabs';
 
 const OrderedService = ({ item, myId }) => {
 
-    const [enabled, setEnabled] = useState(true)
+    const [enabled, setEnabled] = useState(!item.isDone)
 
     const navigation = useNavigation()
 
@@ -16,11 +16,13 @@ const OrderedService = ({ item, myId }) => {
 
     return (
         <View style={enabled ? styles.body : styles.bodyDisabled}>
-            <TouchableOpacity onPress={() => {
-                if (JSON.parse(item.notificationText).type === 'notification-ordering') {
-                    navigation.navigate('Set Your Location', { text: item.notificationText })
-                }
-            }}>
+            <TouchableOpacity
+                disabled={!enabled}
+                onPress={() => {
+                    if (JSON.parse(item.notificationText).type === 'notification-ordering') {
+                        navigation.navigate('Set Your Location', { text: item.notificationText })
+                    }
+                }}>
                 <Text style={enabled ? styles.text : styles.textDisabled}>
                     {JSON.parse(item.notificationText).message}
                 </Text>
@@ -29,15 +31,37 @@ const OrderedService = ({ item, myId }) => {
             <TouchableOpacity
                 disabled={!enabled}
                 onPress={() => {
-                    axios.get(`http://${ipAdd}:${springPort}/garage/${myId}/increaseCapacityByOne`).then(resp => {
-                        alert('The service has been marked as done')
+                    axios.get(`http://${ipAdd}:${springPort}/garage/${myId}/increaseCapacityByOne`).then(resp => { })
+                    axios.post(
+                        `http://${ipAdd}:${springPort}/garage/${myId}/setNotificationDone/${item.notificationId}`,
+                        {
+                            headers: {
+                                "Content-type": "application/json; charset=UTF-8",
+                                "Accept": "application/json"
+                            }
+                        }
+                    ).then(response => {
+                        let copy = [...msg]
+                        for (let i = 0; i < copy.length; i += 1) {
+                            if (copy[i].notificationId == item.notificationId) {
+                                copy[i].isDone = true
+                            }
+                        }
+                        setMsg(copy)
                         setEnabled(false)
+                        alert('The service has been marked as done')
                     })
                 }}>
-                <Text style={styles.icon}>
-                    <Text style={styles.iconText}>Mark as done</Text>
-                    <MaterialIcons name="done" size={24} color={enabled ? "black" : "white"} />
-                </Text>
+                {enabled ? (
+                    <Text style={styles.icon}>
+                        <Text>Mark as done</Text>
+                        <MaterialIcons name="done" size={24} color={enabled ? "black" : "white"} />
+                    </Text>
+                ) : (
+                    <Text style={styles.icon}>
+                        <Text style={styles.done}>Done</Text>
+                    </Text>
+                )}
             </TouchableOpacity>
         </View>
     )
@@ -82,6 +106,12 @@ const styles = StyleSheet.create({
         fontSize: 18,
         marginRight: 4,
         color: 'white',
+    },
+    done: {
+        fontSize: 22,
+        color: 'red',
+        textAlign: 'center',
+        fontWeight: 'bold',
     },
 })
 
