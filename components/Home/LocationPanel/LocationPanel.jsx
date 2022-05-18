@@ -134,8 +134,9 @@ const LocationPanel = ({ setSlide }) => {
                 onValueChange={(itemValue, itemIndex) => setCarType(itemValue)}
                 selectedValue={carType}
             >
-                <Picker.Item label="BMW" value="BMW" />
-                <Picker.Item label="Toyotta" value="Toyotta" />
+                <Picker.Item label="Mercedes-Benz" value="Mercedes-Benz" />
+                <Picker.Item label="Skoda" value="Skoda" />
+                <Picker.Item label="VW" value="VW" />
             </Picker>
 
             <DateTimePicker
