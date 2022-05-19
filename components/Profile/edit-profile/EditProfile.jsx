@@ -17,7 +17,7 @@ const EditProfile = ({ route }) => {
     const [password, setPassword] = useState('')
     const [capacity, setCapacity] = useState(accountObj.capacity)
     const [phone, setPhone] = useState()
-    const [carType, setCarType] = useState('BMW')
+    const [carType, setCarType] = useState('Mercedes-Benz')
 
     const [startTime, setStartTime] = useState('No start time chosen yet')
     const [endTime, setEndTime] = useState('No end time chosen yet')
@@ -181,8 +181,9 @@ const EditProfile = ({ route }) => {
                             onValueChange={(itemValue, itemIndex) => setCarType(itemValue)}
                             selectedValue={carType}
                         >
-                            <Picker.Item label="BMW" value="BMW" />
-                            <Picker.Item label="Toyotta" value="Toyotta" />
+                            <Picker.Item label="Mercedes-Benz" value="Mercedes-Benz" />
+                            <Picker.Item label="VW" value="VW" />
+                            <Picker.Item label="Skoda" value="Skoda" />
                         </Picker>
                     </View>
                 ) : null

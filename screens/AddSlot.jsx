@@ -4,12 +4,9 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import DateTimePicker from 'react-native-modal-datetime-picker'
 import DatePicker from 'react-native-neat-date-picker'
 import { ipAdd, springPort } from '../global functions and info/global'
-import { useNavigation } from '@react-navigation/native'
 
 const AddSlot = ({ route }) => {
     const { service } = route.params
-
-    const navigation = useNavigation()
 
     const [startTime, setStartTime] = useState('')
     const [endTime, setEndTime] = useState('')
@@ -24,10 +21,11 @@ const AddSlot = ({ route }) => {
     useEffect(() => {
         const d = new Date();
         let h = addZero(d.getHours());
+        let nextH = addZero(d.getHours() + 1);
         let m = addZero(d.getMinutes());
         let s = addZero(d.getSeconds());
         let start_time = h + ":" + m + ":" + s;
-        let end_time = (h + 1) + ":" + m + ":" + s;
+        let end_time = nextH + ":" + m + ":" + s;
         setStartTime(start_time)
         setEndTime(end_time)
         setDate(new Date().format('yyyy-MM-dd'))

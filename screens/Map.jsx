@@ -50,7 +50,7 @@ const Map = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {location && accountId && accountType ? (
+      {accountId && accountType ? (
         accountType === 'USER' ? (
           <WebView
             onMessage={(event) => {
@@ -64,7 +64,7 @@ const Map = () => {
             }}
             nestedScrollEnabled
             originWhitelist={['*']}
-            source={{ uri: `http://${ipAdd}:${port}/using-map/${location.coords.longitude}/${location.coords.latitude}` }}
+            source={{ uri: `http://${ipAdd}:${port}/using-map/${35.25648120531551}/${32.22952612635228}` }}
           />
         ) : (
           <WebView
