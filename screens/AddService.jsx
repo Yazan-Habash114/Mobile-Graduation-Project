@@ -61,7 +61,7 @@ const AddService = ({ route }) => {
     const [description, setDescription] = useState('')
     const [price, setPrice] = useState(0)
     const [time, setTime] = useState('00:00:00')
-    const [type, setType] = useState('23:59:59')
+    const [type, setType] = useState('Maintenance')
 
     const addService = () => {
         if (name !== '' && description !== '' && !Number.isNaN(price) && time !== '' && type !== '') {
