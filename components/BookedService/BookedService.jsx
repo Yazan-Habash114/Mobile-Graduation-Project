@@ -63,7 +63,7 @@ const BookedService = ({ item, accountId }) => {
                         Service Type: {item.serviceType}
                     </Text>
                     <Text style={styles.info}>
-                        Service Price: {item.price}
+                        Service Price: ${item.price}
                     </Text>
                     {
                         slotReserved ? (

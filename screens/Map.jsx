@@ -7,7 +7,6 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 const Map = () => {
   const [location, setLocation] = React.useState(null);
   const [errorMsg, setErrorMsg] = React.useState(null);
@@ -50,7 +49,7 @@ const Map = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {accountId && accountType ? (
+      {location && accountId && accountType ? (
         accountType === 'USER' ? (
           <WebView
             onMessage={(event) => {
@@ -64,7 +63,8 @@ const Map = () => {
             }}
             nestedScrollEnabled
             originWhitelist={['*']}
-            source={{ uri: `http://${ipAdd}:${port}/using-map/${35.25648120531551}/${32.22952612635228}` }}
+            // lng = 35.25648120531551, lat = 32.22952612635228 (My Home)
+            source={{ uri: `http://${ipAdd}:${port}/using-map/${location.coords.longitude}/${location.coords.latitude}` }}
           />
         ) : (
           <WebView

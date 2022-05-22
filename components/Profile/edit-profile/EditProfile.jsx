@@ -140,7 +140,7 @@ const EditProfile = ({ route }) => {
         >
             <TextInput
                 style={styles.input}
-                placeholder="Username"
+                placeholder={accountType === 'GARAGE' ? 'Garage Name' : 'Driver Name'}
                 placeholderTextColor="#d0d0d0"
                 onChangeText={value => setUsername(value)}
                 defaultValue={username}
@@ -150,7 +150,6 @@ const EditProfile = ({ route }) => {
                 placeholder="Password"
                 placeholderTextColor="#d0d0d0"
                 secureTextEntry={true}
-                defaultValue={"" + password}
                 onChangeText={value => setPassword(value)}
             />
             <TextInput

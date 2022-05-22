@@ -38,7 +38,7 @@ const ExpertSystemMap = ({ route }) => {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            {location == null ? <WebView
+            {location ? <WebView
                 onMessage={(event) => {
                     // console.log("EVENT-DATA:", event);
                     // console.log(event.nativeEvent.data);
@@ -50,7 +50,7 @@ const ExpertSystemMap = ({ route }) => {
                 }}
                 nestedScrollEnabled
                 originWhitelist={['*']}
-                source={{ uri: `http://${ipAdd}:${port}/using-map-expert-system/${35.25648120531551}/${32.22952612635228}/${inference.problem}/${inference.carType}` }}
+                source={{ uri: `http://${ipAdd}:${port}/using-map-expert-system/${location.coords.longitude}/${location.coords.latitude}/${inference.problem}/${inference.carType}` }}
             /> : null}
         </ScrollView>
     )
