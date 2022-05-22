@@ -7,12 +7,12 @@ import {
 import SignIn from "../signin/SignIn";
 import SignUp from "../signup/SignUp";
 import LocationPanel from "../LocationPanel/LocationPanel";
-import React from 'react';
+import React, { useState } from 'react';
 
 
 const Form = () => {
 
-    const [slide, setSlide] = React.useState(0)
+    const [slide, setSlide] = useState(0)
 
     if (slide === 3) {
         return (

@@ -17,7 +17,11 @@ const SignIn = ({ setSlide }) => {
 
     return (
         <View style={styles.container}>
-            {showForget ? <ForgetWindow setShowForget={setShowForget} /> : null}
+            {showForget ? <ForgetWindow
+                setShowForget={setShowForget}
+                accountType={accountType}
+                email={email}
+            /> : null}
             <TextInput
                 style={styles.input}
                 placeholder="Email"
