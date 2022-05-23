@@ -73,7 +73,7 @@ const EditSlotTimes = ({ route }) => {
                 onPress={() => navigation.navigate('Add Slot Time', {
                     service: service
                 })}>
-                <Text style={styles.addSlotText}>Add New Slot Time</Text>
+                <Text style={styles.addSlotText}>Add New Time Slot</Text>
                 <Ionicons name="add" size={24} color="white" />
             </TouchableOpacity>
             <FlatList

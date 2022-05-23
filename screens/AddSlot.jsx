@@ -89,7 +89,7 @@ const AddSlot = ({ route }) => {
         let startHour = parseInt(startTime.split(':')[0])
         let startMin = parseInt(startTime.split(':')[1])
 
-        if (startHour < hours) {
+        if (startHour <= hours) {
             // setTime()
             if (hours < 10) {
                 if (minutes < 10) {
@@ -129,7 +129,7 @@ const AddSlot = ({ route }) => {
                     "Accept": "application/json"
                 }
             }
-        ).then(response => alert('Slot time addedd successfully'))
+        ).then(response => alert('Time slot addedd successfully'))
     }
 
     return (
