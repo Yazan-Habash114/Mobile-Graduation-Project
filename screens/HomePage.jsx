@@ -56,14 +56,14 @@ const HomePage = () => {
                         </TouchableOpacity>
                     </View>
                 </View>
-            </ScrollView >
+            </ScrollView>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flexGrow: 1,
         backgroundColor: '#dfe6e9',
     },
     image: {
